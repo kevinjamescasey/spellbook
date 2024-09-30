@@ -1,7 +1,7 @@
 import * as React from "react";
 import Layout from "../components/layout";
 import Seo from "../components/seo";
-import liLogo from "../images/LI-logo.png";
+import liLogo from "../images/LI-Logo.png";
 
 const AboutPage = () => {
   return (
