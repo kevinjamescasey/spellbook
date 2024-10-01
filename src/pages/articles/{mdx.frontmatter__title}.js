@@ -17,7 +17,7 @@ export const query = graphql`
 const Article = ({ data, children }) => {
   return (
     <Layout>
-      <div className="prose m-auto">
+      <div className="prose mx-5 sm:mx-20 xl:mx-40 max-w-full">
         <h2 className="">{data.mdx.frontmatter.title}</h2>
         <p className="">{data.mdx.frontmatter.date}</p>
         {children}
