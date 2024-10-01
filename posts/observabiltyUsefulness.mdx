@@ -1,0 +1,62 @@
+---
+title: "Observability Usefulness"
+originalPublishDate: "2024-10-01"
+type: musing
+topics: observability, Site Reliability Engineering (SRE), monitoring, alerting
+lastUpdate: "2024-10-01"
+---
+
+Many years ago when I first heard someone say "we need to start adding monitoring and alerting to all of our systems" my first thoughts were "that will just add more complexity and therefore more problems to eat up our time", "shouldn't we just spend our time making our current system resilient and reliable", and "do we then need to make another monitoring system to monitor the first monitoring system?".
+
+I've since seen the value of spending some time to improve the observability of your systems. For many systems it can be well worth the time spent even though it takes away from time that you could be making enhancements to the systems themselves.
+
+I like to think of it the same way I think about automated tests. If you have a large system with no automated tests, then it becomes dangerous to make changes. Spending some time to add recurring automated testing to your process can provide highly valuable guard rails to ensure that your changes haven't broken fundamental elements of your system. This doesn't work because you write perfect tests. It works because automated tests are like double-checking something from a different perspective. When a test fails, sometimes it is because the subject under test is wrong and sometimes it is because the test itself is wrong. When a test passes it is because the test and subject under test are in agreement about some behavior. It is unlikely that both a passing test and the subject under test both have mistakes that coincide to make the test pass when we want it to fail. (It is quite possible that the code is doing what it was intended to do and is not what the stakeholders need or want, but that is beside the point here.) Automated tests, even if imperfect, can do a good job of making sure the components/sub-systems of your system behaves the way you intended. So adding automated testing can be a boon to the quality of your system and also to the speed of further development of the system since it can save time spent on manual testing and production issue fallout. It can also reduce the stress and worrying that comes from the fragility of systems without automated testing.
+
+I see a couple of the same themes for observability. Namely, adding a little where there is none can provide a good return on the investment and the observability tools don't have to be perfect to add value.
+
+Whereas testing helps prevent changes from causing problems in a live production system, observability can have these benefits:
+- Identifying otherwise hidden causes of perceived problems
+  - Helps to fix live problems faster
+- Identifying otherwise hidden activity in live production systems
+  - Helps to understand the value your system is providing
+  - Helps to decide on which investments to make in improving the system
+- Identifying potential and growing causes of future problems
+  - Helps prevent problems from occurring
+
+So going from no usage of observability tool to some can add some of these benefits. And even if your observability tools can't provide all of these benefits to every part of your system, you can still gain value from applying them.
+
+
+### Spectrum of Value
+
+In automated testing there is a huge spectrum of benefits you can get from different types of test and amounts of coverage. You have to repeatedly decide how much time to invest in creating new tests.
+
+The same is true of adding observability to your systems. The same set of tools provide all of the benefits listed  above, but it depends on the degree to which you apply those tools. So you have to repeatedly decide how much time to invest in adding observability.
+
+People often think that having less than a certain level of automated testing is unacceptable. The same is true for observability.
+
+Having no visibility into what is happening in your live production systems is an obvious problem. At the very least most people expect to have some logging to help find out what went wrong after a problem was already identified. But how good your observability needs to be depends on the importance of the system.
+
+It can be good to keep adding automated testing and observability as you develop a system, but sometimes you may have to stop developing to focus on adding these quality assurance mechanisms.
+
+### Definitions
+
+Surprisingly I cannot find "observability" in any English dictionary. People say Observability is an important part of Site Reliability Engineer (SRE). People say observability is a different thing than SRE. People often say Observability is not the same as monitoring and alerting. It is nice to have a shared vocabulary, but it probably isn't that important to linger on the exact definitions.
+
+There were probably people before who already recognized many of the aspects of what are now being called Observability and SRE. I think it is important to identify some key characteristics that can help us gain the most value out of this swirl of ideas. There are some fundamental things that are really useful.
+
+### Nice Ideas
+
+The most obvious mechanism that is used to provide observability is collecting data from systems in a centralized database where it can be queried. I see most data being collected in the form of JSON. Whether it is logs, traces, metrics, events, or whatever you want to call it; it is information that will help you understand what has happened in those systems. Understanding what has happened in the past can tell you what you what might happen in the future if you don't make any changes. You might need to make changes to prevent a problem from continuing to occur, or you might need to make changes to prevent a problem that is about to occur.
+
+Another obvious mechanism which has been used for decades is monitoring and alerting. Once you have collected data that can be queried, you can repeatedly query it for signals and set off alarm bells if those signals pass certain thresholds.
+
+One nice way to think about getting good value out of your observability tools is the idea of Service Level Objectives (SLOs) and Service Level Indicators (SLIs). SLOs make you think about the purpose of a service and then SLIs make you thing about any signal you can find in the data that will indicate if that purpose is being fulfilled, failing to be fulfilled, or in danger of failing to be fulfilled.
+
+
+### Example
+
+An example of an SLO for a payment system would be to make sure payments are being made successfully, correctly, and timely. You might have an SLI that looks at the count of completed payments recorded per hour in some sub-system. Or you might have an SLI that looks at the error rate in some subsystem involved in making the payments happen. Those are both signals that you can get from subsystem data to indicate that the objective is being met or not being met. Now imagine that a subsystem involved in making the payments is using doing processing on AWS Lambda functions. For invocations of those Lambda functions you could get a signal about how much of the Lambda function's configured timeout time is being used. If the signal indicates that the invocations are trending toward an increasing use of time, then the engineering team could be alerted before the invocations start to fail due to timeouts. Such down-in-the-weeds signals indicate potential failures of a system to meet an SLO before the failure occurs.
+
+### Overdosing
+
+Each signal you monitor requires time to set up. You have to figure out how to get the data out of the system, how to query the data, what thresholds to use on alerts, and what severity of alarm to raise. Then too much noise from alerts can be a huge problem. If a users tell you something is wrong with your system then it is likely that you need to spend some time fixing something. If automated alerts notify you, then it might  be something that doesn't end up being worth your time to investigate. If you make adding observability a regular part of your development then tuning alerts will also become a regular part of your activities. If you don't tune the alerts, then wasting your time responding to them will become a huge part of your activities. If you ignore the alerts then you will lose some of the benefits of observability and have wasted time setting up the alerts. So the observability for your system is only as useful as you make it. That is another thing it has in common with automated testing.
