@@ -47,7 +47,7 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout>
-      <div className="md:columns-2 md:columns-3xl">{articles}</div>
+      <div className="md:grid md:grid-cols-2">{articles}</div>
     </Layout>
   );
 };
