@@ -1,0 +1,111 @@
+---
+title: "CLI Package Management by OS"
+originalPublishDate: "2024-10-02"
+type: reference
+topics: package management, installation, OS
+lastUpdate: "2024-10-02"
+---
+
+
+
+These are popular CLI package installation tools for each OS, not an exaustive list. There are some basic commands to help you quickly get done what you need.
+
+For the examples, `p` is a stand-in for the name of the package so substitute a real package name for `p`.
+
+
+### Linux
+<details>
+<summary>Linux</summary>
+
+Run this to see what is already installed
+```
+which apt snap yum
+```
+
+Canonical is trying to push [Snap](https://snapcraft.io/docs) as a universal Linux package installer.
+
+#### Debian, Ubuntu
+<details>
+<summary> apt</summary>
+
+```
+apt install p
+apt remove p
+apt list --installed
+apt update # get latest package index
+apt upgrade # upgrade packages to the latest version
+apt list --upgradable # see which pacages can be updated
+apt search p
+apt-cache search p
+```
+
+Debian has a whole mess of other tools including apt-get, dpkg, and aptitude.
+
+
+
+</details>
+
+#### RedHat, Fedora, CentOS, Amazon Linux
+<details>
+<summary>yum</summary>
+
+```
+yum info p
+yum install p
+yum remove p
+yum list installed
+yum upate p
+yum update # update all packages
+yum check-update # see which pacages can be updated
+yum search term # find packages with term in the name or description
+
+```
+
+- [Web cheat sheet](https://access.redhat.com/articles/yum-cheat-sheet)
+- [PDF cheat sheet](https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf)
+
+RedHat also has `rpm`.
+
+</details>
+
+</details>
+
+### macOS
+<details>
+<summary>Homebrew </summary>
+
+[Website](https://brew.sh/)
+
+Install
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Use
+```
+brew info p
+brew install p
+brew uninstall p
+brew list # list installed packages
+brew update # update Homebrew and its list of packages
+brew upgrade p
+brew upgrade # upgrade all installed packages
+brew outdated # see which packages can be upgraded
+brew search term # find packages with term in the name
+brew search term --desc # find packages with term in the name or description
+```
+</details>
+
+### Windows
+
+<details>
+<summary>Chocolatey</summary>
+
+- [Install](https://chocolatey.org/install)
+- [Command Docs](https://docs.chocolatey.org/en-us/choco/commands/)
+
+</details>
+
+
+## Other OSes
+This nice [Diagram of OS History and Relationships](https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Fe21s2vb3a2a81.png%3Fwidth%3D4613%26format%3Dpng%26auto%3Dwebp%26s%3Da2bc24827b9caf90eb0c85dae83893976a6d8183) helps explain why some OSes, for example Debian and Ubuntu, tend to share the same tools. New OSes inhereit things from their ancestors. So if the OS you need to work with is not listed, there is a good chance the tools for its closest ancestor will work.
