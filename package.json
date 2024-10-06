@@ -4,11 +4,9 @@
   "private": true,
   "description": "gatsby-example",
   "author": "Kevin Casey",
-  "keywords": [
-    "gatsby"
-  ],
+  "keywords": ["gatsby"],
   "scripts": {
-    "develop": "gatsby develop",
+    "develop": "NODE_NO_WARNINGS=1 gatsby develop",
     "start": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
@@ -25,12 +23,18 @@
     "gatsby-plugin-postcss": "^6.13.1",
     "gatsby-plugin-sharp": "^5.13.1",
     "gatsby-plugin-sitemap": "^6.13.1",
+    "gatsby-remark-images": "^7.13.2",
     "gatsby-source-filesystem": "^5.13.1",
     "gatsby-transformer-sharp": "^5.13.1",
     "postcss": "^8.4.47",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "remark-gfm": "3.0.1",
+    "remark-grid-tables": "^2.2.2",
     "tailwindcss": "^3.4.13"
+  },
+  "dependenciesComments": {
+    "remark-gfm": "v3 is required becuase of this issue with v4: https://github.com/contentlayerdev/contentlayer/issues/558"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15"

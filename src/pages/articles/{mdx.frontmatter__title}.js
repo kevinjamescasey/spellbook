@@ -9,6 +9,7 @@ export const query = graphql`
       frontmatter {
         title
         originalPublishDate(formatString: "MMMM D, YYYY")
+        lastUpdate(formatString: "MMMM D, YYYY")
       }
     }
   }
@@ -19,7 +20,10 @@ const Article = ({ data, children }) => {
     <Layout>
       <div className="prose mx-5 sm:mx-20 xl:mx-40 max-w-full">
         <h2 className="">{data.mdx.frontmatter.title}</h2>
-        <p className="">{data.mdx.frontmatter.date}</p>
+        <p className="">
+          first published on {data.mdx.frontmatter.originalPublishDate}; last
+          published on {data.mdx.frontmatter.lastUpdate}
+        </p>
         {children}
       </div>
     </Layout>

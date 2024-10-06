@@ -1,8 +1,39 @@
 ---
-title: "Ways To Create and Host Websites"
+working-title: "Ways To Create and Host Websites"
 originalPublishDate: ""
 type: musing
 topics: web, website, hosting
+lastUpdate: ""
 ---
 
-Coming soon
+### Essentials
+
+HTML, HTTP handling server
+
+### Create the site content
+
+Hand written
+Generate from scripts
+HTML templating (JSP, ASP)
+Generate From Markdown
+Static Site Generator
+
+### Host the site content on a server
+
+Run it on your own network not exposed to the Internet
+Run it on your own network forwarding ports 80 and 443 to it on one of your public IP addresses
+Provide files to a website hoster
+        AWS S3
+        GitHub pages
+PaaS (Heroku, CloudFoundry, Vercel, Netlify, AWS Elastic Beantalk, Google App Engine)
+Baas (FireBase, AWS Amplify)
+Run free webserver software on a cloud site
+
+### Beyond Websites
+Run code to generate content in Cloud functions behind a gateway or load balancer (not generally used for site HTML)
+    AWS AppSync -> Lambda functions
+    AWS Lambda function URLs (https://docs.aws.amazon.com/lambda/latest/dg/urls-configuration.html)
+
+
+
+Do you want a custom domain or just a subdomain of the hosting site?
