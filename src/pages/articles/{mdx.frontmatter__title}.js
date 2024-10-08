@@ -13,6 +13,7 @@ export const query = graphql`
         originalPublishDate(formatString: "MMMM D, YYYY")
         lastUpdate(formatString: "MMMM D, YYYY")
         images {
+          base
           childImageSharp {
             gatsbyImageData
           }
@@ -26,7 +27,7 @@ const Article = ({ data, children }) => {
 
   // This is slighty better than inline markdown images like this
   // ![Container Tech Diagram](./containersThreeWaysOnOneMachine.jpg)
-  const images = data.mdx.frontmatter.images?.map(i => <GatsbyImage image={getImage(i)} objectFit="contain" />)
+  const images = data.mdx.frontmatter.images?.map(i => <GatsbyImage image={getImage(i)} objectFit="contain" alt={i.base}/>)
 
   const components = {ImgCount: () => images.length}
 
