@@ -26,7 +26,7 @@ const AboutPage = () => {
         </p>
         <p>
           <a href="https://www.linkedin.com/in/kevin-casey-49a8b815/">
-            <img src={liLogo} className="h-8" />
+            <img src={liLogo} className="h-8" alt="LinkedIn"/>
           </a>
           <a
             href="https://docs.google.com/document/d/1xdMVyb7GYVHn4o8AEGNlpXkjpfCg3f6qCWuvhB1NOAg/export?format=pdf"

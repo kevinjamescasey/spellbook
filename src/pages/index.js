@@ -25,7 +25,7 @@ const IndexPage = ({ data }) => {
       const fm = node.frontmatter;
       if (fm.title) {
         return (
-          <div>
+          <div key={fm.title}>
             <article key={node.id} className="p-5">
               <h2 className="text-2xl">
                 <Link to={`/articles/${slugify(fm.title)}`}>{fm.title}</Link>

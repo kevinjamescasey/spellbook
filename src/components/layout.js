@@ -1,9 +1,6 @@
 import * as React from "react";
 import { Link } from "gatsby";
 
-//import openBooks from "../images/openBooks.jpeg";
-
-// console.log(openBooks);
 const Layout = ({ children }) => {
   return (
     <div>
@@ -22,7 +19,9 @@ const Layout = ({ children }) => {
         </Link>
       </nav>
 
-      <main className="mt-5 md:mt-10 mx-10">{children}</main>
+      <main className="mt-5 md:mt-10 mx-10">
+        {children}
+      </main>
     </div>
   );
 };
