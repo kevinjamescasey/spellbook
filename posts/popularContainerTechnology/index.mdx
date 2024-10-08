@@ -1,10 +1,15 @@
 ---
-title: "Popular Containerization and Virtualization Essentials"
+title: "Popular Containerization Essentials"
 originalPublishDate: "2024-10-06"
 type: reference, learning
 topics: containers, docker, kubernetes, virtual machines, colima
-lastUpdate: "2024-10-06"
+lastUpdate: "2024-10-07"
+images:
+    - ./containersOnOptionalLayers.jpg
+    - ./containersThreeWaysOnOneMachine.jpg
 ---
+
+image count: <ImgCount/>
 
 This is meant to provide the trunk and largest branches of the tree of understanding. Follow them to the twigs, leaves, and fruit!
 
@@ -34,18 +39,16 @@ There seems to be many pieces of software that act as both an engine and a runti
 
 These are the most important terms that I have gleaned from documentation and other glossaries.
 
-| Term                   | Definition                                                                                   | Examples                                                                     |
-|------------------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
-| container              | software from a container image running in a process with a limited and isolated environment |                                                                              |
-| container image        | file archive that contains other files required to run piece of software                     |                                                                              |
-| container registry     | a place to store, look up, and retrieve container iamges                                     |                                                                              |
-| container engine       | software that manages container images and containers often as a server for a client         | Docker, CRI-O, Railcar, RKT, LXC, Podman                                     |
-| container runtime      | software component that container engines delegate container running to                      | runc, containerd, docker engine, incus, cri-o, crun, railcar, katacontainers |
-| container host         | machine with OS, virtual machine with OS, or another container where the conainers will run  |                                                                              |
-| container orchestrator | tool that starts, stops, and monitors containers often distrubted across multiple hosts      | Kubernetes, ECS, Docker Compose Swarm, whatever PaaSs use                    |
-|                        |                                                                                              |                                                                              |
-    
-
+| Term                   | Definition                                                                                   | Examples                                                                          |
+|------------------------|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| container              | software from a container image running in a process with a limited and isolated environment |                                                                                   |
+| container image        | file archive that contains other files required to run piece of software                     |                                                                                   |
+| container registry     | a place to store, look up, and retrieve container iamges                                     |                                                                                   |
+| container engine       | software that manages container images and containers often as a server for a client         | Docker, CRI-O, Railcar, RKT, LXC, Podman                                          |
+| container runtime      | software component that container engines delegate container running to                      | runc, containerd, docker engine, incus, CRI-O, crun, railcar, katacontainers, MRC |
+| container host         | machine with OS, virtual machine with OS, or another container where the conainers will run  |                                                                                   |
+| container orchestrator | tool that starts, stops, and monitors containers often distrubted across multiple hosts      | Kubernetes, ECS, Docker Compose Swarm, whatever PaaSs use                         |
+|                        |                                                                                              |                                                                                   |
 
 ### Local Machine Usage
 
@@ -133,22 +136,12 @@ These videos explain how Linux features allow the wonderful isolation and limite
 Apparently container runtimes can depend on or be composed of other container runtimes.This [conainterd vs Docker](https://www.docker.com/blog/containerd-vs-docker/) article has a diagram of component relationships. It explains how containerd uses runc.
 
 This shows some typical relationships between the components
-![Container Tech Diagram](./containersOnOptionalLayers.jpg)
+<Image0 />
 
-This shows a few ways to run on the same machine
-![Container Tech Diagram](./containersThreeWaysOnOneMachine.jpg)
+This shows a few different ways to run containers on the same machine
+<Image1 />
+
 
 Incus documentation provide [comparisons of application containers, system containers, and virutal machines](https://linuxcontainers.org/incus/docs/main/explanation/containers_and_vms/). 
-
-
-#### TODO
-
-`kubeadm` is the way to create "real" clusters.
- how to use it locally
-
-more info about vms and hypervisors
-
-
-
 
 
