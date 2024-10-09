@@ -3,7 +3,7 @@ title: "Popular Containerization Essentials"
 originalPublishDate: "2024-10-06"
 type: reference, learning
 topics: containers, docker, kubernetes, virtual machines, colima
-lastUpdate: "2024-10-07"
+lastUpdate: "2024-10-08"
 images:
     - ./containersOnOptionalLayers.jpg
     - ./containersThreeWaysOnOneMachine.jpg
@@ -90,11 +90,13 @@ These features allow you to create, view, and switch between multiple instances.
 
 + Create multiple instances of Minikube or Colima with the `-p, --profile` option
   + `minikube profile list` and `colima list` to see the profiles
+  + `minikube profile PROFILE-NAME` to switch profiles
 + Docker CLI can use environment variables to determine which server to issue commands to. You can use `eval $(minikube -p minikube docker-env)` to set up your shell so that `docker` CLI commands will use the server and runtime created by Minikube.
 + `docker context ls` lets you see and use different container engines through the same `docker` CLI
   + If the DOCKER_HOST variable is not set your shell you can set the current context with `docker context use CONTEXT`
   + Use the `-c --context` option with `docker` commands to target different engines, overriding the current context or env variable specified engine
 + `kubectl config get-contexts` shows which clusters exist and which one it is using
+  + `kubectl config use-context CLUSTER-NAME`to switch clusters
 
 
 #### Try Out Commands
@@ -134,7 +136,7 @@ These videos explain how Linux features allow the wonderful isolation and limite
 Apparently container runtimes can depend on or be composed of other container runtimes.This [conainterd vs Docker](https://www.docker.com/blog/containerd-vs-docker/) article has a diagram of component relationships. It explains how containerd uses runc.
 
 This shows some typical relationships between the components
-<Image0 />
+<Image0 className="z-0"/>
 
 This shows a few different ways to run containers on the same machine
 <Image1 />

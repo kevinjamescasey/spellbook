@@ -20,6 +20,14 @@ export const query = graphql`
         }
       }
     }
+
+allImageSharp(
+    filter: {fixed: {originalName: {eq: "android-chrome-512x512.png"}}}
+  ) {
+    nodes {
+      gatsbyImageData
+    }
+  }
   }
 `;
 
@@ -42,11 +50,12 @@ const Article = ({ data, children }) => {
   return (
     <Layout>
       <div className="prose mx-5 sm:mx-20 xl:mx-40 max-w-full">
+        <GatsbyImage image={getImage(data.allImageSharp.nodes[0])} alt="" className="size-10 z-20"/>
         <h2 className="">{data.mdx.frontmatter.title}</h2>
-        <p className="">
-          first published on {data.mdx.frontmatter.originalPublishDate}; last
-          published on {data.mdx.frontmatter.lastUpdate}
-        </p>
+        <div className="grid md:grid-cols-2   justify-items-start">
+          <div className="flex-none"><span className="italic">first published on</span> <span className="">{data.mdx.frontmatter.originalPublishDate}</span></div>
+          <div className="flex-none"><span className="italic">last updated on</span> <span className="">{data.mdx.frontmatter.lastUpdate}</span></div>
+</div>
         <MDXProvider components={components}>{children}</MDXProvider>
       </div>
     </Layout>
