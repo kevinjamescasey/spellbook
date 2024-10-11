@@ -3,7 +3,7 @@ title: "Create New Projects from Existing"
 originalPublishDate: "2024-09-30"
 type: musing
 topics: project creation, project template, project scaffold
-lastUpdate: "2024-10-01"
+lastUpdate: "2024-10-11"
 ---
 
 When creating a new project it helps to duplicate an existing structure as a starting point. Directories arranged in a certain way can provide organization and files can provide scripting, configuration, and starting samples.
@@ -37,3 +37,6 @@ These methods use existing projects and tools that were meant for creating new p
 - [Vercel Templates](https://vercel.com/templates)
 - [Netlify Templates](https://www.netlify.com/integrations/templates/)
 - [projen](https://projen.io/)
+  - This tool makes it almost unbearably difficult to make simple configuration changes for popular highly documented tools because it doesn't allow you to edit the configuration directly and instead forces you to explore poorly documented projen code. It turns 5 minute web search and update config solutions into 30+ minute code investigations.
+  - The idea is that by not allowing direct authoring it can prevent drift from a centralized configuration allowing config updates via code to propogate to all projects that update to the latest version of the centralized config.
+  - Use this if you want strict application of the Don't Repeat Yourself principle (DRY) and permanent centrally controlled conformity across several projects  
