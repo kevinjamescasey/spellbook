@@ -4,11 +4,18 @@ import Seo from "../components/seo";
 import liLogo from "../images/LI-Logo.png";
 
 const AboutPage = () => {
+
   return (
     <Layout>
       <article className="prose m-auto mt-4">
         <p>
-          I made this to organize my guides, references, observations, musings,
+          I have over 20 years of full stack software engineering experience over a board range of technlogies and use cases including:
+          <ul>
+            <li>applictations on mainframe, desktop, web, cloud, and mobile</li>
+            <li>writing production code in at least 10 different programming languages</li>
+            <li>solving problems for Fortune 50 companies, startups, and quasi-govermental entities</li>
+          </ul>
+          I made this site to organize my guides, references, observations, musings,
           ramblings...
         </p>
         <p>
@@ -22,7 +29,7 @@ const AboutPage = () => {
         <p>
           See the site directory on{" "}
           <a href="https://kevinjamescasey.github.io/">My GitHub User Site</a>{" "}
-          to see the technology all of my sites
+          for a summary of my websites.
         </p>
         <p>
           <a href="https://www.linkedin.com/in/kevin-casey-49a8b815/">
