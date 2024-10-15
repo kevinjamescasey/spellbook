@@ -3,7 +3,7 @@ title: "Local Large Language Model in Python"
 originalPublishDate: "2024-10-11"
 type: guide
 topics: LLM, Python, 
-lastUpdate: "2024-10-11"
+lastUpdate: "2024-10-15"
 ---
 
 This is a step-by-step guide that explains how to get a Large Language Model (LLM) on your local machine and invoke it to perform inference from Python code.  
@@ -101,7 +101,7 @@ I assume the responses can be made more helpful by choosing a model that is trai
 
 I assume that the LLMs I use via other means have been given some prompting that is not visible to me and that proper prompting will make these models more useful. Meta's [Prompting How-To Guide](https://www.llama.com/docs/how-to-guides/prompting) should help.
 
-It seems that using LLMs via web calls is more popular than running them locally. There are suggestions on to make them more viable on network edge computers (such as end-user devices), but I've also heard people suggest that there are "headwinds" making that more difficult. Clearly better results come from larger models ran on faster and/or specialized processors, but time how much inference and what type occurs where; I suspect most inference will happen in the cloud. Google has invested in making [TPUs](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) available in edge machines including their Pixel mobile devices. I wonder if there will be a market for specialized home servers to run model inference on local networks. It could provide lower latency for a more responsive experience. It could provide reduced costs if model inference as a service (MIaaS?) providers continue to charge a premium. There would be significant difficulty in creating a server that is easy to set up and getting app makers to use it. Maybe companies that provide network attached storage (NAS), home media server, or smart home hubs could provide home AI servers.
+It seems that using LLMs via web calls is more popular than running them locally. There are suggestions on to make them more viable on network edge computers (such as end-user devices), but I've also heard people suggest that there are "headwinds" making that more difficult. Clearly better results come from larger models ran on faster and/or specialized processors. Where will thet inference happen in the future? I suspect most inference will happen in the cloud because optimizing enough to run small efficient purpose-built models on edge computers is difficult. Google has invested in making [TPUs](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) available in edge machines including their Pixel mobile devices. I wonder if there will be a market for specialized home servers to run model inference on local networks. It could provide lower latency for a more responsive experience. It could provide reduced costs if model inference as a service (MIaaS?) providers continue to charge a premium. There would be significant difficulty in creating a server that is easy to set up and getting app makers to use it. Maybe companies that provide network attached storage (NAS), home media server, or smart home hubs could provide home AI servers.
 
 Anyhow, I think app creators will have a challenge figuring out where to run model inference performantly and cost-effectively.
 
