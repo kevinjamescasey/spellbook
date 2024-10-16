@@ -9,11 +9,11 @@ const AboutPage = () => {
     <Layout>
       <article className="prose m-auto mt-4">
         <p>
-          I have over 20 years of full stack software engineering experience over a board range of technlogies and use cases including:
+          I have over 20 years of full stack software engineering experience over a broad range of technologies and use cases including:
           <ul>
-            <li>applictations on mainframe, desktop, web, cloud, and mobile</li>
+            <li>applications on mainframe, desktop, web, cloud, and mobile</li>
             <li>writing production code in at least 10 different programming languages</li>
-            <li>solving problems for Fortune 50 companies, startups, and quasi-govermental entities</li>
+            <li>solving problems for Fortune 50 companies, startups, and quasi-governmental entities</li>
           </ul>
           I made this site to organize my guides, references, observations, musings,
           ramblings...
@@ -29,7 +29,7 @@ const AboutPage = () => {
         <p>
           See the site directory on{" "}
           <a href="https://kevinjamescasey.github.io/">My GitHub User Site</a>{" "}
-          for a summary of my websites.
+          for a summary of my web sites.
         </p>
         <p>
           <a href="https://www.linkedin.com/in/kevin-casey-49a8b815/">
