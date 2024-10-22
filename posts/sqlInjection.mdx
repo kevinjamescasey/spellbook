@@ -1,0 +1,75 @@
+---
+title: "Preventing SQL Injection"
+originalPublishDate: "2024-10-22"
+type: musing, learning
+topics: security, SQL injection
+lastUpdate: "2024-10-22"
+---
+
+
+You start with an SQL statement fragment and a value that needs to be a part of the statement.
+
+For example, the SQL statement fragment might be
+
+``` sql
+select * from table1 where col1 = 
+```
+
+and the value is something that you would expect to potentially match some `col1` value(s) in `table1`.
+
+Presumably the value came in to this program as input so we can't be sure exactly where it originated from, but we know it didn't originate within this program. 
+
+## Bad approach
+
+1. Combine the value and the SQL statement fragment with intentions of making a complete SQL statement
+2. Submit the presumably complete SQL statement to the database engine
+3. The database engine parses, interprets, and executes the statement
+
+## Good approach
+
+1. Submit the SQL statement fragment as a template and the value to the database engine separately
+2. The database engine parses and interprets the statement template recognizing that it needs another value
+3. The database engine executes the code required to fulfill the query described in the statement  
+   3.a. The database scans `col1` (or an index) for the given value
+
+## Explanation
+
+Notice that in the good approach the given value is never involved in parsing and interpreting SQL because it is only used after the parsing and interpreting step has already completed. This means any attempt to conduct an injection attack through the value will fail. The injection of the value into the SQL string never happens. An attacker could still waste compute time, but they won't ever be able to alter the intent expressed in the SQL template. The attacker is not allowed to provide anything that will ever be interpreted as SQL.
+
+In the bad approach string concatenation or interpolation effectively injects the attackers value into the SQL template and gives it the possibility to change the meaning of the SQL before it is interpreted by the database engine.
+
+Notice that in the good approach we don't mention validating the contents of the value. It is good to validate inputs to the extent that you can so they can be rejected as soon as possible and unnecessary processing can be avoided, but validation is complicated and will vary greatly across countless use cases. Imperfect validation could still allow malicious values through to the database engine. If those values are never injected into a string that is intended to be SQL, then the database engine will never have the opportunity to interpret them as SQL.
+
+## Practicalities of the good approach
+
+The way to provide SQL fragments and input values to a database engine separately is through [parameterized queries](https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html). These only allow you to provide dynamic values for certain parts of SQL. If you need other parts of SQL to be dynamic, such as table or column names, then validating against allow lists could be a good approach.
+
+## Further musings
+
+It seems that libraries that create and execute prepared statements still ultimately have to submit SQL statements to the database engine, so they could still be vulnerable to injection attacks. For example, in PostgreSQL prepared statements still require an EXECUTE statement to provide the parameter values.
+
+``` sql
+PREPARE fooplan (int, text, bool, numeric) AS
+    INSERT INTO foo VALUES($1, $2, $3, $4);
+EXECUTE fooplan(1, 'Hunter Valley', 't', 200.00);
+```
+Another example from MySQL shows the parameter values being provided in a SET statement
+
+``` sql
+mysql> PREPARE stmt1 FROM 'SELECT SQRT(POW(?,2) + POW(?,2)) AS hypotenuse';
+mysql> SET @a = 3;
+mysql> SET @b = 4;
+mysql> EXECUTE stmt1 USING @a, @b;
+```
+
+So How do these programming language libraries actually execute the prepared statements safely?  
+Is there some other way to submit the values to the database without submitting an SQL string?  
+
+The libraries can validate that the values are of the type that you expressed. It seems easy to validate that a value is valid number or boolean. It doesn't seem possible for a single number or boolean to be a malicious value on its own. But a valid string could contain any possible valid SQL. What stops a malicious string from properly ending the EXECUTE statement and injecting other types of statements?
+
+Maybe the libraries that create and execute prepared statements just do a better job of sanitizing input than you could be expected to do on your own?
+
+Is there a way to put the database engine in a mode where it only accepts one SQL statement per submission? It seems like that would be a way to prevent most powerful injection attacks, because most of them seem to properly end the initial statement and add extra malicious statements after it. If that were possible then it wouldn't be possible for an attacker to make an EXECUTE statement do more than execute the one prepared statement that was already specified.
+
+Anyhow, I don't have a good explanation that makes me believe that parameterized queries fully prevent injection attacks. It appears that they just kick the can down the road a little further. Instead of attacking toward the end of a typical data manipulation language (DML) statement, the attacker could attack near the end of an EXECUTE or SET statement. 
+
