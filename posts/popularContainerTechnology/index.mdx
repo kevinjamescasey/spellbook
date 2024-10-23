@@ -3,7 +3,7 @@ title: "Popular Containerization Essentials"
 originalPublishDate: "2024-10-06"
 type: reference, learning
 topics: containers, docker, kubernetes, virtual machines, colima
-lastUpdate: "2024-10-08"
+lastUpdate: "2024-10-23"
 images:
     - ./containersOnOptionalLayers.jpg
     - ./containersThreeWaysOnOneMachine.jpg
@@ -115,7 +115,7 @@ From [Hello Minikube](https://kubernetes.io/docs/tutorials/hello-minikube/)
 ``` shell
 kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.39 -- /agnhost netexec --http-port=8080
 kubectl get deployments
-kubectl get deployments
+kubectl get pods
 kubectl get events
 ```
 
