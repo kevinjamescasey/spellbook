@@ -15,7 +15,7 @@ import Layout from "../components/layout";
 
 
 const PayPal = () => {
-const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false)
 
   return (
     <Layout>
