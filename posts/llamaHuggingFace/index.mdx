@@ -3,7 +3,7 @@ title: "Local Large Language Model in Python"
 originalPublishDate: "2024-10-11"
 type: guide
 topics: LLM, Python, 
-lastUpdate: "2024-10-15"
+lastUpdate: "2024-10-24"
 ---
 
 This is a step-by-step guide that explains how to get a Large Language Model (LLM) on your local machine and invoke it to perform inference from Python code.  
@@ -93,13 +93,13 @@ By default the output from the model is limited to a very short amount of text. 
 max_new_tokens=200,
 ```
 
-The model I used here seems to respond slowly compared to other LLMs I've tried via web , such as [ChatGPT](https://chatgpt.com/)or locally via [GPT4All](https://www.nomic.ai/gpt4all). It also doesn't respond to questions in a helpful conversational manner.
+The model I used here seems to respond slowly compared to other LLMs I've tried via web interfaces, such as [ChatGPT](https://chatgpt.com/) and [Claude](https://claude.ai/), or locally via [GPT4All](https://www.nomic.ai/gpt4all). It also doesn't respond to questions in a helpful conversational manner.
 
 I assume that performance can be improved by choosing the correct model and configuring it properly. I've seen settings for some models to make it use a GPU instead of a CPU. Reading Meta's [Quantization How-To Guide](https://www.llama.com/docs/how-to-guides/quantization) might also help with performance.
 
 I assume the responses can be made more helpful by choosing a model that is trained to be a helpful assistant. The diagram on the [Code Llama Integration Guide](https://www.llama.com/docs/integration-guides/meta-code-llama) suggests that certain models are fine tuned for certain behaviors like chat, instruct, or long contexts. It is not really clear exactly what those are and it the models you find are not clearly marked with the type of tuning they've had.
 
-I assume that the LLMs I use via other means have been given some prompting that is not visible to me and that proper prompting will make these models more useful. Meta's [Prompting How-To Guide](https://www.llama.com/docs/how-to-guides/prompting) should help.
+I assume that the LLMs I use via other means have been given some prompting that is not visible to me and that proper prompting will make these models more useful. Meta's [Prompting How-To Guide](https://www.llama.com/docs/how-to-guides/prompting) or Anthropic's [Prompt Engineering](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) should help.
 
 It seems that using LLMs via web calls is more popular than running them locally. There are suggestions on to make them more viable on network edge computers (such as end-user devices), but I've also heard people suggest that there are "headwinds" making that more difficult. Clearly better results come from larger models ran on faster and/or specialized processors. Where will thet inference happen in the future? I suspect most inference will happen in the cloud because optimizing enough to run small efficient purpose-built models on edge computers is difficult. Google has invested in making [TPUs](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) available in edge machines including their Pixel mobile devices. I wonder if there will be a market for specialized home servers to run model inference on local networks. It could provide lower latency for a more responsive experience. It could provide reduced costs if model inference as a service (MIaaS?) providers continue to charge a premium. There would be significant difficulty in creating a server that is easy to set up and getting app makers to use it. Maybe companies that provide network attached storage (NAS), home media server, or smart home hubs could provide home AI servers.
 
