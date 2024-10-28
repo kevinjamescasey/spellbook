@@ -1,0 +1,100 @@
+---
+title: "Journey to VSCode"
+originalPublishDate: "2024-10-28"
+type: musings
+topics: VSCode, Emacs, Doom Emacs
+lastUpdate: "2024-10-28"
+---
+
+Why and how I ended up using VSCode the way I do after 8+ years of using Emacs and a dozen years of using other editors and IDE.
+
+## Back story
+I started out editing code on Texas Instruments calculators and the basic or qbasic on MSDOS. I don't even remember what the editors were like, but I'm sure they were simple. In college I used vi on Unix Sparc or Solaris machines in the Computer Science lab for 4 years. I used some IBM mainframe editors to write assembler, COBOL, and PL/I. I believe either Sublime or Notepad++ was decent for viewing and editing binary and hex. When I started doing Java and JavaScript at AT&T I used the free Eclipse and NetBeans IDEs. I used vi again to write C code for one team at AT&T. I use a couple IBM Websphere specific IDEs including Websphere Integration Developer to write BPEL and Java. Most IBM tools, including their app servers were pretty garbage. They definitely weren't better than the free tools. I used Eclipse many more years at AT&T and the Fed to write Java, JavaScript, and Python. I used IntelliJ at Monsanto to write Scala. It was pretty polished and full feature-complete compared to the free tools. It was slick and reliable. I also tried other editors form time to time such as atom and nano.
+
+## Emacs
+
+Along the way I started looking for a language that was significantly different because all of the languages with Simula-like syntax seemed like slight variations of the same thing. I noticed on a graph of languages that Lisp had its own branch that started way back in the past and didn't tangle much with the other branches. An awesome guy I knew, Trevor Lovett, mentioned to me that there was a Lisp that runs on the JVM called Clojure and he even lent me a book on it!. It introduced me to the paradigm of functional programming. Its difference from other languages and programming styles gave me exactly the type of learning that I was looking for. Since Clojure runs on the JVM it takes advantage of all of the existing libraries and tools in the vast Java ecosystem. There was actually a chance that I'd be able to use it professionally some day. I bought a second book for another perspective and stuck with the practice. I learned a different way of thinking from the language, the books, Rich Hickey (the Clojure creator), and the Clojure community. It was obvious to me that they were not trapped in the same thought bubble as the mainstream programming communities. When the results of the annual State of Clojure survey were posted one year, I noticed that a huge majority of said they were using Emacs to write Clojure code. Since I trusted the community's intelligence I assumed they knew something that I didn't and jumped into Emacs. The [CIDER](https://github.com/clojure-emacs/cider) environment package is what made it so popular. There was an okay Clojure extension for IntelliJ that I tried, but it was behind CIDER in providing popular features.
+
+When I first started using Emacs I tried plain ol' vanilla GNU to see if I could learn a different way to work. It was quite painful to learn the lingo and strange shortcuts at first. I quickly found packages that claimed to improve several default configurations. For example, simply [replacing text that is selected by typing](https://stackoverflow.com/questions/41164330/replace-highlighted-selected-text-in-emacs-by-default). My own custom config and collection of packages grew into a mess. I tried Spacemacs for a couple years to provide a nice layer of config and packages that moves Emacs towards a fully functioning IDE like IntelliJ. Eventually I switched to Doom for the same purpose. I found Doom to provide more features and default behaviors that I liked, which meant I had to configure less myself. Since Emacs is free, the oldest open source project still surviving, and endlessly malleable; I decided it was worth it to invest the time to make it a great environment that I'd use for decades. I wouldn't have to worry about buying licenses or it losing support and falling behind the feature trends. It has always had packages that help with every new programming language and technology shortly after they emerge. I went on to write my own Emacs Lisp functions, minor mode, and endless customizations. Some of the things it can do are delightful but the work on it never ends. With packages and config from so many sources it always seemed like a hodge-podge experience. The base GNU Emacs and every package or conglomeration of config came with their own shortcut keys and style. The reason I had to create my own minor mode was just to override the key bindings that other packages would throw in. If those key bindings overlapped with mine they would change behavior that worked globally to behavior that worked almost globally. It was very annoying.
+
+I don't want muscle-memory that occasionally doesn't provide the same behavior depending on the current state of the UI. I want to be able to rely on the intuition of my fingers and experience a consistent unified set of behaviors. I want a small set of actions and behaviors, not endless quirks, nuances, and idiosyncrasies. It is just too much to remember and too distracting. For this reason I never used the Evil mode defaults (vi style modal editing) provided by Spacemacs and Doom. I want to rely on muscle-memory and take actions that lead to expected behaviors. I don't want to be conscience of which mode the tool happens to be in. Every time you get an unexpected behavior it breaks your flow of tasks and changes your focus form the code you're building to the tool you're building with. In the most immersive video games you can go for hours without thinking about what your fingers are doing or which controls currently do what. I want that same experience while building software.
+
+## VSCode
+
+Simple editors like Microsoft Notepad provide consistent behavior in reaction to your actions, but they make it very tedious because you have to take every little action yourself. Editors embedded in web pages have that same simple, but slow and clunky, feel. They don't have all the auto-magic of more complex IDEs. It is refreshing for a moment, but you soon want more. When I needed a job I suspected I might have to use some of those web-embedded editors to complete coding challenges for interviews. Many code challenge web sites use them. It is good to be efficient in them since you likely won't be able to use your favorite IDE in the interview process. So I started giving VSCode a try. It has the same basic click to focus, type to insert text, and copy-paste with he universal key shortcuts popular on Windows (Ctrl-C, Ctrl-v) and Mac (Cmd-C, Cmd-v) software. Most mainstream IDE and editors have supported this kind of experience -- everything that doesn't feel like vi or Emacs. You could say it is the lowest common denominator. It good to have this basic experience as the core of your coding workflow so you don't have to alter your own behavior when you use other tools. So the trick is to ease on some more layers of capabilities that improve the workflow without interfering with the basic fundamental capabilities.
+
+### Fundamentals
+From Emacs I picked up navigating up/down/left/right lines with Ctrl-p/n/b/f (previous/next/back/forward). Also, navigating to beginning and end of lines with Ctrl-a and Ctrl-e. These are provided by default in VSCode, many desktop app text boxes (such as browser address bars), many web page text boxes, and many REPLs (such as shells in terminals). Vi's navigation keys don't work in most places because none of those places support modal navigation.
+
+From Emacs I picked up canceling things with Ctrl-g instead of the far away Esc key.
+
+From Emacs I picked up navigating with Ctrl-s to search (Ctrl-r for reverse) for a couple letters or whole identifier. It is not as precise as the way you can navigate in vi, but it is much simpler and completely adequate. This also often works for command history in shells.
+
+From Spacemacs I picked up using Ctrl-Space as a prefix for key chords. It is efficient and ergonomic to use each to reach keys for the most frequent actions.
+
+From Emacs I picked up selecting text in a couple of ways. Expanding the selection according to the syntax is good for coding. Setting a mark and moving the point (cursor) to another place is good for precise control when you don't want to drag or hold down Shift. There are fancier ways to select in Emacs and insanely fancy ways to navigate and select in vi, but they're too complicated to rely on. Selection of expression and moving expressions is really convenient in Lisps because the structure is consistently uniform. Every token or fragment that you might want to treat as a unit is delimited by parenthesis or spaces. They're all function calls or macro calls too. It makes them easy to compose and re-compose like Lego bricks.
+
+From Emacs I've adopted Ctrl-/ for undo in addition to the ubiquitous Cmd/Ctrl-z.
+
+For copy-paste I'm still using some strange keys from Emacs (Ctrl-y (yank (from kill ring))) (Ctrl-w (cut)). Because the Alt key is a pain to reach I've changed Alt-w (copy) to Ctrl-'. Since I have the Caps Lock key mapped to Ctrl these are very easy to reach, even easier than Cmd-c and Cmd-v on a Mac. The Caps Lock key is easier to reach than the usual modifier key locations. These key combinations are inconsistent with the ubiquitous c/v/x for copy/paste/cut, but those are already slightly inconsistent between operating systems. I'd like to figure a scheme for this that is universal across all editing locations and operating systems while being very comfortable and easy to reach. For now, I have multiple key combinations bound to each command, so no matter what my fingers choose it works. But when I move outside the IDE I have to remember to use the Cmd/Ctrl-c/v/x keys. In Emacs Ctrl-x and Ctrl-c are heavily used prefixes for key chords, so it is difficult to repurpose those for cut and copy unless I completely abandon Emacs. For this topic, my thinking is clearly wound around the axle and knotted up.
+
+All of these are pretty easy to configure in VSCode and don't require extensions.
+
+### Beyond editing text
+
+These programming language specific features can be provided by extensions: 
+
+Syntax highlighting, code navigation, auto-complete suggestions, code refactoring, linting violations, syntax errors, type errors, auto formatting,  REPL integration, step debugging
+
+Emacs and VSCode can get support for language specific features from the same language servers via the Language Server Protocol (LSP). 
+
+These features are also available:
+spell checking, embedded shell terminal, Large Language Model (LLM) integration (read files, write files, chat)
+
+VSCode provides polished solutions for all of these albeit with limited customizability.
+
+
+### Versus Emacs
+
+It is easy to add custom behavior to Emacs by writing a little bit of code like these two Emacs Lisp functions that allow opening files and directories in VSCode:
+
+``` emacs-lisp
+(defun get-path-dwim ()
+  "Find a path indicated by point or buffer focus."
+  (-first 'identity (list (and (string-equal major-mode "dired-mode")
+                               (dired-get-filename nil t))
+                          (and (string-equal major-mode "dired-mode")
+                               (dired-current-directory))
+                          (thing-at-point 'filename)
+                          (buffer-file-name))))
+
+(defun open-in-vscode ()
+  "Open the thing identified by get-path-dwim in VSCode."
+  (interactive)
+  (let ((file-path (get-path-dwim)))
+    (shell-command
+     (concat "code " (shell-quote-argument (expand-file-name file-path))))))
+
+```
+
+It doesn't seem possible to customize VSCode in this way since you have to write an entire extension. Maybe it is good to avoid going down that rabbit hole. Everything you need can be provided by existing extensions and keyboard shortcut configurations if you adjust your workflow to use what is readily available.
+
+Many features in VSCode come with intuitive point and click UIs that make it easy to do basic things without memorizing command names or key bindings. This is especially true for navigating and manipulating directories and files in VSCode Explorer like you would in Windows File Explorer or macOS Finder. Emacs has a plethora of ways to be able to do these things, but the provided defaults are not quite as intuitive. I think VSCode's Explorer and using a shell is plenty adequate to replace things like [dired](https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html) and [neotree](https://github.com/jaypei/emacs-neotree). Another example of nice clickable features is collapsing sections of structured text. Emacs has ways of doing collapsing and narrowing, but the VSCode collapsing appears to just work well for any programming language or data format.
+
+There are still features I have in Emacs that would be very difficult to get working in VSCode, such as navigating shell output with the same keys used to navigate regular buffers. I haven't yet found anything in VSCode like ibuffer, org-mode, ace-window or the butterfly function. I haven't seen anything like [hydra](https://github.com/abo-abo/hydra), [transient](https://github.com/magit/transient), or [which-key](https://github.com/justbur/emacs-which-key).
+
+I already abandoned Magit in favor of using the Git ClI to avoid slowdowns and an extra abstraction layer, but that type of keyboard driven menu UI is till really handy in other parts of Doom. 
+
+I appreciate Ediff and how it can be used from Magit, but it always seemed clunky. The Source Control diffs in VSCode are pretty easy to understand. It is also easy to compare to select two files from the VSCode Explorer for comparison. There are VSCode extensions for comparing directories.
+
+I don't know if VSCode has something like [Tramp](https://www.gnu.org/software/emacs/manual/html_node/tramp/index.html#Top) for editing remote files, but I haven't used that in years. It is usually better to re-pave remote machines through deployment of tested files. The days of maintaining long lived irreplaceable individual hosts have been supplanted by orchestrating clusters of disposable servers hosted in VMs and/or containers. Now all fine grained editing can be local. 
+
+I don't know if VSCode has ways to save things to registers and jump back to them. Emacs can save buffer locations, window layouts, and text to named storage locations called registers. It window configuration undo capabilities and management of workspaces within a single window frame. These features are occasionally useful, but I don't use them heavily. 
+
+In VSCode I tend to have one window per project or Git Repository. VSCode Explorer is not as fluid as using find-file with suggestions tools like ido, counsel, and helm. It doesn't allow navigating up and down the directory hierarchy like dired and neotree do because you can't go above the project root without adding another root to the workspace or replacing the existing root. To simply go to the parent directory of the project root you have to open up a modal, find the parent, select the parent, and click the Open button. Then all of your open tabs disappear. In Emacs going to the parent would be a single key shortcut or click and your open buffers would not be affected. At least when you repeat the process to reopen the child directory again the same tabs reappear. Apparently the tabs are tied to the currently open root directory somehow.
+
+For some reason code navigation and navigating back and forth through a bread crumb trail of locations seems to work better in VSCode. 
+
+Emacs has some functions that are named so oddly that they can't easily be found by filtering on guesses. For example `dired-omit-mode` shows and hides dot files files. Neotree provides the much better named `neotree-hidden-file-toggle`. To toggle word wrapping in a buffer you use `visual-line-mode`. VSCode provides little to no documentation at all on the available command names. You can see the names but you can jump to the docs or code. Overall in-app discoverability is better in Emacs. 
+
+I will definitely be relying more heavily on VSCode for making software, but I don't think I will ever fully abandon Emacs since it is endless fountain of creative and useful features.
