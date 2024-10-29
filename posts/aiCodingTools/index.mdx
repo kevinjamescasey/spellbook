@@ -1,0 +1,91 @@
+---
+title: "AI Coding Tools"
+originalPublishDate: "2024-10-29"
+type: reference
+topics: LLM, AI, software development, software engineering
+lastUpdate: "2024-10-29"
+---
+
+
+## VSCode Extensions
+
+Summary so far (ordered by count of installs)
+
+|                | chat | suggest in editor        | use LLM API                     | use local LLM        | read local files    | write to local files    |
+|----------------|------|--------------------------|---------------------------------|----------------------|---------------------|-------------------------|
+| GitHub Copilot | ✅   | ✅                       | ✅ only one non-free provider   | ❌                   | ?                   | ?                       |
+| Codeium        | ✅   | ✅ usually triggers      | ✅ works for Codeium free model | ❌                   | ✅                  | ❌                      |
+| CodeGPT        | ✅   | ✅ flaky getting started | ✅ works for free trial         | ✅ Ollama, LM studio | ❌ only current tab | ❌ insert from chat     |
+| Cody           | ✅   | ✅                       | ✅ 5 free ones                  | ✅ Ollama            | ✅ contents only    | ❌ apply to current tab |
+| llm-vscode     |      |                          |                                 |                      |                     |                         |
+|                |      |                          |                                 |                      |                     |                         |
+
+I haven't tried GitHub Copilot or llm-vscode yet. I made some assumptions about GH Copilot. The other ones I tried myself. I will update as I learn more and features change.
+
+These are details about what I experienced.
+
+[GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
+* only free if you can prove you're paying for school
+* requires sign in
+* 30 day free trial
+* haven't tried
+* provides limited controls to create [custom models](https://docs.github.com/en/enterprise-cloud@latest/copilot/customizing-copilot/creating-a-custom-model-for-github-copilot)
+* supposedly it will start [allowing the use of models from other providers](https://www.theverge.com/2024/10/29/24282544/github-copilot-multi-model-anthropic-google-open-ai-github-spark-announcement)
+
+[Codeium](https://marketplace.visualstudio.com/items?itemName=Codeium.codeium)
+* requires sign in for every VSCode window
+* after sign in immediately responded to chat without choosing a models
+  - using Codeium model in cloud via API based on Llama
+* requires paying for any other models
+* was able to view contents of workspace and summarize
+* required a VSCode window reload for one window
+* ghost suggestions just randomly started and sometimes don't appear
+* suggestions based on comments
+* if you undo or delete it may not suggest the same thing again
+* when I ask it add comments to multiple files it suggests a script that will do it, but it won't edit for me
+* [self hosted but not free model server](https://codeium.com/blog/self-hosting-is-easy)
+
+[CodeGPT: Chat & AI Agents](https://marketplace.visualstudio.com/items?itemName=DanielSanMedium.dscodegpt)
+* even after signing can use 8 free daily interactions
+  - requires selecting an agent
+    - can just select New Agent
+* very few extension settings
+  - but configurable directly in UI pane
+* separate chat and completion models
+* appears to support many models but remote API connections don't work after providing API keys
+* ghost completion suggestions didn't seem to work for a long time
+  - then finally started working for some reason after signing in and switching providers back and forth
+  - `/fix` with an empty function will generate a function that can be inserted
+* allows local models
+* Can only see current tab's file but you can tell it to remember files one at a time
+
+[Cody: AI Coding Assistant with Autocomplete & Chat](https://marketplace.visualstudio.com/items?itemName=sourcegraph.cody-ai)
+* requires sign in
+* immediately downloads a search index for repository in current workspace
+* great docs showing [supported models](https://sourcegraph.com/docs/cody/capabilities/supported-models)
+* easy to switch between free third party model APIs
+* chat suggests commands to run in terminal and you can run them with a couple  button click (not that useful)
+* click the @ symbol or type it in chat to provide context from local files or remote websites
+  - doesn't seem to read all files in repository even thought there is an option to provide it
+  - extra [Cody++](https://marketplace.visualstudio.com/items?itemName=mnismt.cody-plus-plus) extension will paste all files into chat to provide their contents as context 
+  - does not understand directory structure
+* There is an apply button on code snippets in chat that will try to apply changes to your current tab
+
+[llm-vscode](https://marketplace.visualstudio.com/items?itemName=HuggingFace.huggingface-vscode)
+* not tried yet
+
+
+## Emacs
+
+I may not get around to trying these since I'm mostly switching over to VSCode
+
+https://github.com/ahyatt/llm  
+https://github.com/karthink/gptel  
+https://github.com/jart/emacs-copilot  
+
+
+## Tools I haven't tried yet
+Cursor - Non-free VSCode fork 
+ChatGPT Code interpreter - Supposed to compile and run code. Should allow LLM to do anything it can write code for.  
+Chatgpt voice mode - Interact with your voice instead of fingers.  
+Google Gemini voice mode - Interact with your voice instead of fingers.  

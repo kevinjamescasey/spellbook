@@ -1,0 +1,61 @@
+---
+title: "Use Large Language Models"
+originalPublishDate: "2024-10-29"
+type: reference
+topics: LLM
+lastUpdate: "2024-10-29"
+---
+
+These are some ways to use Large Language Models 
+
+## Human Interaction  
+
+###  Web UI
+Interact with a remotely hosted models through a web browser
+
+[ChatGPT](https://chatgpt.com/)  
+[Claude](https://claude.ai/)
+
+
+
+### Local UI
+Interact with a model running locally
+
+[GPT4All](https://www.nomic.ai/gpt4all)  
+* desktop GUI  
+* [Python SDK](https://docs.gpt4all.io/gpt4all_python/home.html) -  run a Python script that downloads models into a cache and uses them  
+* load local files (can use Google Drive Desktop to sync cloud docs)  
+* [HTTP API server](https://docs.gpt4all.io/gpt4all_api_server/home.html)  
+ 
+[Ollama](https://www.nomic.ai/gpt4all)
+* CLI for managing models
+* CLI for chatting
+* Libraries: [Python](https://github.com/ollama/ollama-python) [JavaScript](https://github.com/ollama/ollama-js?tab=readme-ov-file) - not sure what these do yet
+
+
+[LM Studio](https://lmstudio.ai/)
+
+
+
+###  Integrated Dev Environment (editor)
+    See [AI Coding Tools](../ai-coding-tools) for using both remote and local models
+
+## Computer Interface
+
+### Call from code
+    [Python calls cached model downloaded from Hugging Face](../local-large-language-model-in-python)  
+    [LangChain](https://js.langchain.com/docs/introduction/)
+
+
+## Run as a server
+    Some of the local tools allow running a server and running from code, but how would you really run a production server?
+
+## Call API for managed model inference
+    Probably provide an API key and make a normal web call..  
+    Which ones have SDKs?  
+    Many of the model providers provide a paid service. Many service providers charge for hosting free models such as Meta's Llama models.  
+    Which ones can you call for free?  
+    Some of the VSCode extensions allow free calls to popular models, but it is not clear if the calls are being made directly or passed through a proxy.  
+
+
+
