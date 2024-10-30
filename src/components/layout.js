@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
         </Link>
       </nav>
 
-      <main className="my-5 md:mt-10 mx-10">
+      <main className="my-5 md:mt-10 mx-10 overflow-x-auto">
         {children}
       </main>
     </div>
