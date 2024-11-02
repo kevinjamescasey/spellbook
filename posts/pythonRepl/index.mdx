@@ -3,11 +3,11 @@ title: "Python REPL Integration"
 originalPublishDate: "2024-10-15"
 type: guide
 topics: Python, Doom Emacs, VSCode
-lastUpdate: "2024-10-15"
+lastUpdate: "2024-11-02"
 ---
 
 
-Both Emacs and VSCode let you run a Python REPL and send code from files to the REPL. They both allow the REPL to use the virtual environment (venv) that you want. But they both make it cumbersome to use multiple venvs.
+Both Emacs and VSCode let you run a Python REPL and send code from files to the REPL. They both allow the REPL to use the virtual environment (venv) that you want. The Emacs one is limited to one REPL instance using one venv. The VSCode one is virtually unusable because the selected venv does not remain in use.
 
 ## Doom Emacs Python environment
 
@@ -34,9 +34,19 @@ It doesn't appear to be possible to use more than one venv at a time so using di
 
 The Python extension for VSCode provides a Python REPL that can be started with the `Python: Start Native Python Repl` command or by the `Python: Run Selection/Line in Python REPL` command that send a line to the REPL. The default shortcut for the command is `Shift + Enter`.
 
-The REPL seems to get stuck on one venv, so you can't use mutiple venvs in the same workspace. There is a `Python: Select Interpreter` command that lets you choose the venv directory, but it doesn't seem to work.
+You can only run one REPL this way and it sort of gets stuck on some default Ptyhon interpreter that is not in a venv, so using even one venv is difficult. There is a `Python: Select Interpreter` command that lets you choose the venv directory, but it doesn't seem to work for the REPL. It does work for the terminal. If you open a new terminal it will automatically activate the venv. To attempt to change the venv for the REPL
+1. Click on the top right of the REPL where it says "Python REPL"
+2. Click "Select Another Kernel..."
+3. Click "Python Environments"
+4. Finally select the path to the venv
+5. Accept the installatiion that it requests
 
-The best way to use a different venv seems to be launching a new instance of VSCode by running `code .` in a shell with current directory set to the root directory of the project that you want to run the new venv in.
+That will allow you to type in Python that uses the venv, but if you send code from a file it will change it from you venv back to "Python REPL".
+
+The Python REPL shows several hints that is is some sort of special Jupyter Notebook that has one special cell to type in at the bottom. You can edit and copy cells. When you click the Variables button it opens a JUPYTER tab in the same panel as the terminal.
+
+It seems that just using a Jupyter Notebook is better since it will stay using the same venv that you told it to use.
+
 
 ## Troubleshooting
 
@@ -45,4 +55,6 @@ Run this in a script or REPL to see the paths where it will look for packages:
 import sys; print(sys.path)
 ```
 For the scirpt or REPL to find the packages installed in thet venv,  the list should include the subdirectory of the venv's directory where the packages are isntalled, for example, `<venv directory>/lib/python3.12/site-packages`.
+
+Run `echo $VIRTUAL_ENV` in a shell to see which venv is activated.
  
