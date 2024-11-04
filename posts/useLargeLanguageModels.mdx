@@ -3,7 +3,7 @@ title: "Use Large Language Models"
 originalPublishDate: "2024-10-29"
 type: reference
 topics: LLM
-lastUpdate: "2024-10-29"
+lastUpdate: "2024-11-04"
 ---
 
 These are some ways to use Large Language Models 
@@ -44,18 +44,34 @@ Interact with a model running locally
 
 ### Call from code
     [Python calls cached model downloaded from Hugging Face](../local-large-language-model-in-python)  
-    [LangChain](https://js.langchain.com/docs/introduction/)
+
+### Call API for managed model inference
+
+You can call the web APIs and provide an API key. Some model providers do provide SDK libraries to help call their hosted model service APIs, for example, [OpenAI](https://platform.openai.com/docs/libraries) and [Anthropic](https://docs.anthropic.com/en/api/client-sdks). [Lang Chain](https://python.langchain.com/docs/introduction/) seems to provide a library that acts a universal SDK for popular LLM APIs.
+
+Many of the model providers provide a paid service. Many service providers charge for hosting free models such as Meta's Llama models.  
+Which ones can you call for free?  
+* [Impressive list of inference APIs that provide free requests](https://github.com/cheahjs/free-llm-api-resources)
+* [Arli AI](https://www.arliai.com/)
+* [Shale](https://shaleprotocol.com)
+
+Some of the VSCode extensions allow free calls to popular models, but it is not clear if the calls are being made directly or passed through a proxy.  
 
 
-## Run as a server
-    Some of the local tools allow running a server and running from code, but how would you really run a production server?
+### Run as a server
+    The proprietary models can only be used through web APIs. You can only run inference on your own server if the model provider lets you download the model weights. You could run a server that delegates the inference to a web API. That seems to be what [Lange Chain](https://python.langchain.com/docs/introduction/) is mainly about. They provide libraries to make it easier to call LLMs and embed those calls into a service that integrates LLM capabilities with other tools. 
+    
+Some of the tools from the [Local UI](#local-ui) section above allow running a server and running from code, but are they suited for running a production server?
 
-## Call API for managed model inference
-    Probably provide an API key and make a normal web call..  
-    Which ones have SDKs?  
-    Many of the model providers provide a paid service. Many service providers charge for hosting free models such as Meta's Llama models.  
-    Which ones can you call for free?  
-    Some of the VSCode extensions allow free calls to popular models, but it is not clear if the calls are being made directly or passed through a proxy.  
+How about [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving) or [TorchServe](https://pytorch.org/serve/)?
+
+This [LLM Speed Analysis](https://www.inferless.com/learn/exploring-llms-speed-benchmarks-independent-analysis) shows 6 different libraries that help run inference on LLMs. They all have generic performance and efficiency claims in their docs:
+* [vLLM](https://github.com/vllm-project/vllm)  
+* [TGI](https://huggingface.co/docs/text-generation-inference/en/index)  
+* [DeepSpeed Mii](https://github.com/microsoft/DeepSpeed-MII)  
+* [CTranslate2](https://github.com/OpenNMT/CTranslate2)  
+* [Triton+vLLM Backend](https://github.com/triton-inference-server/vllm_backend)  
+* [TensorRT-LLM](https://github.com/NVIDIA/TensorRT-LLM)  
 
 
 
