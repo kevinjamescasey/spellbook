@@ -99,7 +99,7 @@ I assume that performance can be improved by choosing the correct model and conf
 
 I assume the responses can be made more helpful by choosing a model that is trained to be a helpful assistant. The diagram on the [Code Llama Integration Guide](https://www.llama.com/docs/integration-guides/meta-code-llama) suggests that certain models are fine tuned for certain behaviors like chat, instruct, or long contexts. It is not really clear exactly which Meta models are best for each purpose and the models you find on Hugging Face are not clearly marked with the type of tuning they've had. They all have the same generic text that describes the whole family of models.
 
-The model I chose appears to be a base model that just extends the text you provide as if it is trying to finish you sentence. The ones with "instruct" in the name, such as `meta-llama/Llama-3.2-1B-Instruct`, appear to have instruction fine tuning that makes that respond as if they're another person having a conversation with you. 
+The model I chose appears to be a base model that just extends the text you provide as if it is trying to finish you sentence. The ones with "instruct" in the name, such as `meta-llama/Llama-3.2-1B-Instruct`, appear to have instruction fine tuning that makes them respond as if they're another person having a conversation with you. 
 
 I assume that the LLMs I use via other means have been given some prompting that is not visible to me and that proper prompting will make these models more useful. Meta's [Prompting How-To Guide](https://www.llama.com/docs/how-to-guides/prompting) or Anthropic's [Prompt Engineering](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) should help.
 
