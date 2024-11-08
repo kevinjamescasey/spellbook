@@ -1,0 +1,22 @@
+---
+title: "Fascinating Rama PStates"
+originalPublishDate: "2024-11-08"
+type: musing
+topics: Rama, PStates, distributed systems, cloud computing 
+lastUpdate: "2024-11-08"
+---
+
+Red Planet Labs has a system engineering tool/platform called Rama that has an interesting data management solution called [PStates](https://redplanetlabs.com/docs/~/pstates.html#gsc.tab=0).
+
+This is a fascinating concept that sounds like it could be a general replacement for all database management systems (DBMSs). Certainly every technology has its pros and cons so there would likely still be niches for specific database types and tools, but it is interesting to think that there could be an alternative that is so flexible that it can be used in place of most other databases. It is an incredible claim to imply, so it is difficult to tell if it is marketing hype or a revolutionary concept. Even if it is a great new thing, that doesn't mean it will catch on.
+
+Clearly this new technology won't come with all of the tools and integrations that we could benefit from with existing database technologies, but maybe we don't need all of those. We just need to get the data in and get the data out albeit in very specific ways such as streaming (in and out), loading from files, querying via request-response, etc. PStates are a part of Rama and not a stand-alone tool, so it might only be worth the adoption if you embrace the whole of Rama. It is a hard sell to get people to adopt a completely new system wholesale like that in place of a myriad of tools from an established ecosystem.
+
+Rama has a Java API and seems inextricably tied to the JVM.  I found out about Rama through the Clojure community, so I'm sure any other languages that provide good inter-operation with Java code would be usable too. They do also provide a Clojure API now.
+
+Is it just another database? Just another database type? Is it the ultimate database?
+
+Rama itself seems to be a huge bite to chew at once. Its distributed computing and storage nature reminds me of the Hadoop ecosystem. That ecosystem has gotten huge adoption under the "big data" marketing umbrella, but hasn't replaced the traditional piecemeal style of building systems from disparate components. Are Rama and Hadoop both examples of [grid computing](https://en.wikipedia.org/wiki/Grid_computing)? Has "grid" in this context just become a useless term that has been superseded by "distributed", "cluster", and "cloud"? The grid vision of providing the same ubiquity for computing that the AC electric grid provides for energy doesn't seem to be realized by any technology. The public cloud providers seem to be the closest thing we have to that ubiquity, but they don't include all of the personal and IoT devices that we have distributed across the places we roam. I guess it is unlikely that Rama, Hadoop, or anything will ever provide that sort of ubiquitous system, but they seem to aspire toward it. All of our so-called artificial intelligence technologies aspire toward intelligence without actually achieving it, but we still call them AI technologies rather than "cognitive automation" (as suggested by François Chollet in [Deep Learning with Python](https://www.manning.com/books/deep-learning-with-python) section 14.2.5).
+
+However Rama and its PStates are categorized, they are definitely interesting and creative ideas about how to make computers more useful for humans.
+
