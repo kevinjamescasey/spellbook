@@ -1,0 +1,176 @@
+---
+title: "Learning Go"
+originalPublishDate: "2024-11-13"
+type: musing
+topics: Golang, Go Programming Language
+lastUpdate: "2024-11-13"
+---
+
+## Is Go worth learning or using?
+
+When I first learned Go it seemed like too much hype and not much novel substance. It didn't have a dependency management system like the Python, JavaScript, and Java ecosystems. It required you to clone Git repositories into one global directory structure. I heard it failed as a C/C++ replacement because its garbage collector caused pauses in processing that couldn't afford pauses. It didn't really make sense to use Go in many scenarios. The performance improvements that it would likely provide were not really worth giving up the massive ecosystems of libraries and tools that come with other languages for most projects. I'm sure there were niches where it made sense.
+
+The Communicating Sequential Processes (CSP) implementation looks fun, but it doesn't seem to be a killer feature. The same style of implementation of CSP was ported to Clojure and ClojureScript as a library. It is impressive to see what it can do, but most people don't seem care about it for most projects.
+
+I've heard Rust doesn't have the same garbage collector problem and has a better chance at replacing C/C++. I've seen it catching on in Python data science libraries that have been traditionally written in C for maximum performance.
+
+It seems like Rust might win the popularity contest eventually for fast auto-memory managed languages. JavaScript seems the obvious choice if you'll also be doing significant UI work. Python seems the obvious choice if you are doing mostly data science work. I doubt that the Go ecosystem is nearly as large as the Java one yet, but a case could be made that Java doesn't have any clear advantages over Go.
+
+But I have to admit that while learning Go again there are many things about the language that seem like good design choices. The dependency management experience is much better than it used to be and the available libraries only increase in number. The language, the tools, and the documentation are remarkably frustration free. Even if you don't intend to use Go, it is still worth spending a couple days learning it just to experience its aesthetics. 
+
+
+## Learning Go
+
+
+The [W3 Schools Tutorial](https://www.w3schools.com/go/index.php) quickly covers the bare-bones basics that overlap with other popular languages. It doesn't get into the features that differentiate Go from the crowd.
+
+[A Tour of Go](https://go.dev/tour/list) covers those features and the [Get Started Tutorial](https://go.dev/doc/tutorial/getting-started) quickly introduces the official dependency management tools.
+
+
+## Notable Language Design Choices
+
+Most of these can be found in the official tour.
+
+* first class functions and closures 👍
+
+* names starting with capital letters are exported 🤨
+  - This doesn't seem like a good idea.
+  - If you were trying to read some code and didn't know this, it would not be intuitive or expected.
+  - An explicit export would make it clear and not force you into a naming convention.
+
+* truthiness of non-boolean types
+  - Using a non-boolean value where a boolean is expected just isn't allowed, so you don't have to worry about it. 👍
+  - You need to explicitly check for length zero, empty string, or nil.
+
+* package vs modules
+    * package
+        - exported names are made available in the file that their package is imported into
+          - imported names are still qualified by the last element of their package's import path
+        - package contents can be split up across several files all declaring the same package name
+        - can't have two different package names declared in files in the same directory
+        - good to have package name match containing directory name (last element of import path)
+    * module
+        - versioned collection of packages
+           - must use semver preceded by "v"
+        - can be published
+        - can be fetched based on dependency declarations in go.mod files
+        - often best for one source version control repository to contain only one module
+          - but it can contain more
+          - sub-modules share a path prefix with their parent
+        
+* structs  
+    - user defined type
+    - collection of fields
+    - like an object or a map with static keys
+    - like C but can involve interfaces, methods, and polymorphism
+    - pointers to structs are implicitly dereferenced for dot notation member access
+        - (sort of like how method receivers are implicitly derefrenced or address-of'ed)
+    - created conveniently by struct literals with or without specified field names
+    - can omit the struct name within a map or array(slice) literal
+
+``` go
+type MyStruct struct {}
+```
+
+* arguments are passed to function by copying the value
+    - Unlike Java there is no reference type where a copy of the reference is implicitly passed.
+    - You have to explicitly pass a pointer/reference.
+        - (this is not the same for method receivers)
+    - I haven't found any official tutorials or guides that make this clear.
+        - This excerpt from the language spec explains how [Calls](https://go.dev/ref/spec#Calls) work:
+> After they are evaluated, the parameters of the call are passed by value to the function and the called function begins execution. The return parameters of the function are passed by value back to the caller when the function returns. 
+
+* pointers  
+    * required to avoid passing a copy of a value to a function  
+        - more efficient than copying large object in memory  
+        - the function gets direct access to the referenced value  
+          -  it can mutate it  
+    * the explicit address-of, derefrencing, and declaring pointer types is an unnecessary distraction for most programs 😒  
+      *  most popular languages just default to not making a copy of composite typed values
+           -  then you can make an explicit "defensive" copy when you need to make sure the original is not modified
+      *  requires separate memory with make() or new()
+           - new(T) -  returns a zero *T -  [intro](https://go.dev/doc/effective_go#allocation_new)
+           - make(T) - returns an initialized T where T is a slice, map, or channel - [intro](https://go.dev/doc/effective_go#allocation_make)
+
+* lack of exception handling 🤔
+    - I guess these mechanisms can be abused for non-exceptional control flow, but I don't consider them harmful.
+        - exceptionality is subjective
+    - They can also be a cop-out to avoid thinking about consequences, but that can be a good thing in many situations, such as prototyping.
+    - When used thoughtfully they can improve readability and clearly differentiate between happy path and error handling.
+    - Taking them away is a constraint imposed just like removing goto or restricting imperative, procedural, and mutating styles as is done in functional programming.
+    - The `panic` and `recover` as described in [Defer, Panic, and Recover](https://go.dev/blog/defer-panic-and-recover) are similar to `throw` and `catch`
+      - can't delineate scope with a `try` block
+      - `recover` only occurs within a `defer` which only occurs after a whole function body
+
+* defer
+  - mainly to guarantee resource cleanup or logging despite errors occurring 🤷
+  - sort of like a Python `with` block or `finally` block
+
+* uninitialized variables get zeroed values
+    - they differ by type
+    - 0, 0.0, false, "", nil
+    - structs get their fields zeroed
+
+## Fancy Features
+
+* methods
+    - object oriented classes without classes
+    - the methods aren't in a single block because they each refer to the type via a special receiver argument
+        - slightly reminiscent of Python's `self` but typed
+        - slightly reminiscent of Java's `this` but explicitly declared on each method
+    - the type referred to has to be in the same package
+    - implicit address of or dereference occurs if the method accepts the opposite of what is used (pointer vs value)
+        - so dot notation for receivers is slightly more forgiving than regular argument passing
+            - (this is like the implicit dereferencing that occurs for the dot notation access of struct fields)
+
+* interfaces
+    - collection of method signatures that are implicitly implemented by methods on a type
+    - only declared explicitly on variables
+    - makes sure that the value stored in a variable has the methods that you plan on calling
+``` go
+type MyInterface interface {}
+```
+* generics
+    - necessary due to rigidity of compile-time enforced static typing
+    - functions and types can accept a type parameter
+
+* type definitions vs type aliases
+  - can't add methods to type aliases
+  - type aliases don't accept type parameters until [Go 1.24 in 2025](https://go.dev/blog/alias-names)
+
+* concurrency 🤩
+  - An implemented interpretation of [CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes)
+  - Not as complete as Clojure's concurrency story
+    - default immutability
+    - multiple [Concurrent Programming](https://clojure.org/about/concurrent_programming) mechanisms
+    - Java's thread system
+    - [core.async](https://clojure.org/guides/async_walkthrough) (inspired by Go)
+
+* type assertions
+  - safe type narrowing
+  - conditional logic based on underlying type
+  - allows access to underlying type's fields
+  - I guess this is a bit of a run time pivot from the abstract interface type (concerning methods) to the concrete type (concerning data fields)
+
+## Cutesy Conveniences
+
+* switch statements can use value matching, type matching, or boolean expressions
+
+* multiple return values (like Python)
+  - this is convenient and has little downside
+  - in most languages you can just return multiple things in a single structure
+  - they insist you use it for returning errors since they don't provide throwing and catching
+
+* many control flow statements allow adding a statement after the first keyword and before the main argument
+  - not sure why they thought this was important to include 🤷
+  - I guess it is convenient and allows a variable to be scoped to the statement block
+
+* named return values
+  - specify the names of the variables returned on the signature line
+  - then the return statement doesn't need to name them
+
+## Reference
+
+* [format verbs from W3Schools](https://www.w3schools.com/go/go_formatting_verbs.php) - needed for printing out text
+* [official fmt docs](https://pkg.go.dev/fmt) - official docs for format verb 
+* [standard library](https://pkg.go.dev/std@go1.23.3)
