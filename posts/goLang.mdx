@@ -67,6 +67,8 @@ Most of these can be found in the official tour.
         - (sort of like how method receivers are implicitly derefrenced or address-of'ed)
     - created conveniently by struct literals with or without specified field names
     - can omit the struct name within a map or array(slice) literal
+    - embeeded stucts - fields are sort of inlined
+    - fields can have string [tags](https://go.dev/wiki/Well-known-struct-tags) - static metadata accessed via the [`reflect`](https://pkg.go.dev/reflect#StructTag) package
 
 ``` go
 type MyStruct struct {}
@@ -146,7 +148,7 @@ type MyInterface interface {}
     - Java's thread system
     - [core.async](https://clojure.org/guides/async_walkthrough) (inspired by Go)
 
-* type assertions
+* [type assertions](https://go.dev/tour/methods/15)
   - safe type narrowing
   - conditional logic based on underlying type
   - allows access to underlying type's fields
@@ -174,3 +176,5 @@ type MyInterface interface {}
 * [format verbs from W3Schools](https://www.w3schools.com/go/go_formatting_verbs.php) - needed for printing out text
 * [official fmt docs](https://pkg.go.dev/fmt) - official docs for format verb 
 * [standard library](https://pkg.go.dev/std@go1.23.3)
+* [go cli docs](https://pkg.go.dev/cmd/go)
+* [find packages](https://godoc.org/)
