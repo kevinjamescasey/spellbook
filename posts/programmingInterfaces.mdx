@@ -1,0 +1,58 @@
+---
+title: "Programming Language Interfaces"
+originalPublishDate: "2024-12-02"
+type: musing
+topics: programming, interfaces, expression problem, open-closed principle, protected variations, information hiding, DRY
+lastUpdate: "2024-12-02"
+---
+
+
+What are interfaces in programming languages and why do they exist?
+
+## Motivation
+
+It starts with the Don't Repeat Yourself (DRY) principle. Programmers want to write generic code that can be resused in many different ways. If you break it down into operations and data, there are a couple strategies to help achieve DRYness.
+1. You can try to write generic operations that work on many different data types including data types that don't yet exists. That way when a new data type is needed to handle new data in some way that existing data types can't, the generic operations can be reused on the new data type.
+2. You can write generic data types that can be reused for data in many situations. That way when new programs are written they can take advantage of all of the existing operations that already work on the existing data types. And if new operations are written for those existing data types, they can be applied to any past and future data that was or will be stored in those data types.
+
+In either case you need to be aware of what already exists and recognized that it can be reused.
+
+The desire to allow both options above is known as the Expression Problem. Language authors want to allow
+1. Adding new data types that work with existing operations.
+2. Adding new operations that work with existing data types.
+
+In both cases they want to adhere to the Open-Closed principle. They want the new things to be added without modifying any of the existing things, so that the existing things are closed for modification, but the overall system is still open for extension.
+
+There is no magic that allows code to just work for all future data types. The operation might be so abstract that it only takes on a specific meaning with the added context of a specific data type. For example, a `print` operation might mean showing the digits for a number type (converting binary bits to decimal digits), showing the characters for a string type (sequentially in order), or recursively showing elements contained within brackets for a nested collection type. So a straight forward way to  allow new data types to be used with exist operations is to create a new implementation of the operation but still use the same operation name. It is cheating. If we're not really getting operation reuse, what is the point?
+
+When you consider composability of code then you have to think about the code that calls/invokes the operations. If the calling module has some algorithm that requires a certain operation, then it is possible that the algorithm will still work correctly when invoking different implementations of the same operation on different data types. For example, if the algorithm calls a `serialize` operation to get a character representation of the data that can be written to storage or network, then the algorithm doesn't need to know which data type is being used or the details of how the type is serialized. So while the implementations for `print` or `serialize` may not be generic -- they have to be reimplemented for each data type -- the operations that use those operations can be made generic if they are protected from having to change due to the variations in those data types because the details of those data types are hidden from them. The only thing required to make the calling operations generic is to allow them to make the same invocation regardless of the data type being used. In every language I've seen invocations are expressed by stating the name of the operation and listing the arguments. So how does the compiler or interpreter know which operation implementation to use? How does it provide the polymorphic behavior of dispatching to the correct operation implementation for each data type?
+
+## Object methods without compile time type checking
+
+Without compile time type checking preventing us we can just pass in objects to the calling operation that have the appropriate methods. Then the calling operation can invoke the method in the same way regardless of the data type or operation implmentation. This can be done, for example, in JavaScript and Python. The relationship between the data type and the method (operation implementation) are pre-configured so that the method comes along already attached to the data. There is no need for a compiler to check any interface declarations or any inheritence relationship. So there is no need for the programmer to define either of those. There is no need for any matching or conditional logic to determine the correct operation implementation.
+
+## Object methods with compile time type checking
+
+If the compiler checks all the data types then it knows which type is being used and it knows which implementation of the operation to use. But if the calling operation is hard-coded to use a specific data type then its code would have to change for each data type thus violating the Open-Closed principle and failng to solve the Expresion Problem. In this case you need to create an interface type to tell the compiler which operations are allowed to be called on the type and the compiler will ensure that any type that could potentially be used has implementations for all of the operations that might be called. New data types can be created later that adhere to the rules declared by the interface type. The data type used can be determined at runtime as long as all of the canidate data types adhere to the interface type. This allows the type of data that is ultimately used to be chosen elsewhere.
+
+So an interface is a type defined by a programmer that consists of a name and a set of operation signatures. Languages like Java and Go make you define interface types and declare where they are used on variables that will contain the various concrete types that implement the interfaces.
+
+Why can't the compiler infer the interface type from the operations that are potentially invoked and the data types that are potentially used? I'm not sure if it is possible or feasible.
+
+Now we know that an interface is a type that a programmer uses to satisfy a compile time type checker. It may also be useful for the person reading the code to see where the interface type is used and which operations the concrete types need to have.
+
+## Other polymorphic didpatch techniques
+
+Python [multiple dispatch](https://stackoverflow.com/questions/66711586/is-there-any-difference-between-multimethod-and-multipledispatch)  
+JavaScript [multimethods](https://github.com/caderek/arrows/tree/master/packages/multimethod)  
+Clojure [multimethods](https://clojure.org/reference/multimethods) - dispatch based on custom function applied to all arguments  
+Clojure [protocols](https://clojure.org/reference/protocols)  
+  - fast dispatch on type of first argument
+  - essentially same thing as interfaces but with a different name
+  - does not use object.method notation
+    - must be the reason it requires declaration before use
+    - since it is being invoked like a function you have to tell the compiler to treat it like a method
+
+## Summary
+
+Interfaces facilitate polymorphism mainly in languages with compile time type checking. Polymorphism facilitates writing generic code that adheres to the Open-Closed principle which facilitates reuse instead of repeated rewriting. 
