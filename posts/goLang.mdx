@@ -3,7 +3,7 @@ title: "Learning Go"
 originalPublishDate: "2024-11-13"
 type: musing
 topics: Golang, Go Programming Language
-lastUpdate: "2024-11-19"
+lastUpdate: "2024-12-02"
 ---
 
 ## Is Go worth learning or using?
@@ -24,7 +24,7 @@ But I have to admit that while learning Go again there are many things about the
 
 The [W3 Schools Tutorial](https://www.w3schools.com/go/index.php) quickly covers the bare-bones basics that overlap with other popular languages. It doesn't get into the features that differentiate Go from the crowd.
 
-[A Tour of Go](https://go.dev/tour/list) covers those features and the [Get Started Tutorial](https://go.dev/doc/tutorial/getting-started) quickly introduces the official dependency management tools.
+[A Tour of Go](https://go.dev/tour/list) covers those features and the [Get Started Tutorial](https://go.dev/doc/tutorial/getting-started) quickly introduces the official dependency management tools. [Effective Go](https://go.dev/doc/effective_go) gets into the weeds
 
 
 ## Notable Language Design Choices
@@ -41,6 +41,14 @@ Most of these can be found in the official tour.
 * truthiness of non-boolean types
   - Using a non-boolean value where a boolean is expected just isn't allowed, so you don't have to worry about it. 👍
   - You need to explicitly check for length zero, empty string, or nil.
+  
+* equality by value comparison
+  - comparing isn't allowed if the two things' types are not compatible
+    - one is assignable to the other (is-a relationship)
+  - they are considered equal if they have the same structure and primitive values
+  - pointers are not followed. rather their addresses are compared
+  - slices and maps aren't comparable with `==`
+    - `reflect.DeepEqual` can compare them
 
 * package vs modules
     * package
@@ -76,8 +84,11 @@ type MyStruct struct {}
 
 * arguments are passed to function by copying the value
     - Unlike Java there is no reference type where a copy of the reference is implicitly passed.
-    - You have to explicitly pass a pointer/reference.
-        - (this is not the same for method receivers)
+    - You often have to explicitly pass a pointer/reference.
+        - this is not the same [for method receivers](https://go.dev/tour/methods/6)
+    - if you pass something like a slice that has its own internal pointers it can behave like a reference type
+      - it has pointers that refer to an underlying array
+      - even though the slice is copied, the copy of the pointers still reference the same array
     - I haven't found any official tutorials or guides that make this clear.
         - This excerpt from the language spec explains how [Calls](https://go.dev/ref/spec#Calls) work:
 > After they are evaluated, the parameters of the call are passed by value to the function and the called function begins execution. The return parameters of the function are passed by value back to the caller when the function returns. 
@@ -148,7 +159,7 @@ type MyInterface interface {}
     - Java's thread system
     - [core.async](https://clojure.org/guides/async_walkthrough) (inspired by Go)
 
-* [type assertions](https://go.dev/tour/methods/15)
+* [type assertions](https://go.dev/tour/methods/15) and [type switches](https://go.dev/doc/effective_go#type_switch)
   - safe type narrowing
   - conditional logic based on underlying type
   - allows access to underlying type's fields
@@ -173,8 +184,8 @@ type MyInterface interface {}
 
 ## Reference
 
-* [format verbs from W3Schools](https://www.w3schools.com/go/go_formatting_verbs.php) - needed for printing out text
-* [official fmt docs](https://pkg.go.dev/fmt) - official docs for format verb 
+* [format verbs from W3Schools](https://www.w3schools.com/go/go_formatting_verbs.php) - needed for printing out text - misisng some details
+* [official fmt docs](https://pkg.go.dev/fmt) - official docs for format verb
 * [standard library](https://pkg.go.dev/std@go1.23.3)
 * [go cli docs](https://pkg.go.dev/cmd/go)
 * [find packages](https://godoc.org/)
