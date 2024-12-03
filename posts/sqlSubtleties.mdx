@@ -1,0 +1,111 @@
+---
+title: "SQL Subtleties"
+originalPublishDate: "2024-12-03"
+type: reference
+topics: SQL
+lastUpdate: "2024-12-03"
+---
+
+How SQL statements are processed has subtleties that could provide misleading results if not understood. This is a collection of explanations of those subtleties.
+
+## COUNT
+
+The COUNT function in SQL has some dangerous subtleties.
+
+``` sql
+qlite> select count(*) from ingredients;
+count(*)
+--------
+51063
+sqlite> select count(type) from ingredients;
+count(type)
+-----------
+0
+```
+
+The above shows that are 51k records in the `ingredients` table and none of them have a value in the `type` column.
+
+The below two statements look contradictory.
+
+``` sql
+sqlite> select count(type) from ingredients where type is null;
+count(type)
+-----------
+0          
+sqlite> select count(type) from ingredients where type is not null;
+count(type)
+-----------
+0
+```
+
+But if you pay close attention to what is being counted, you'll see that the `count` function is only counting non-null values in the `type` column. The first where clause will result in zero records. The second where clause will result in 51063 records that all have null in the `type` field.
+
+It is helpful to think of `count` as "countNotNull", because that is what is really doing.
+
+### The maybe never case
+
+Is it possible to have a row with all null field values? Will `count(*)` count that record as one or zero?
+
+## LEFT JOIN with filtering
+
+If you've chosen a left join that means you want every record from the left table and you will accept the lack of matching records in the right table. You're probably expecting to have some results where all of the fields that come from the right table have null values. But if you're also trying to do some filtering on values from the right table then it can eliminate the result records that otherwise would have had occurred. That means the results can omit records from the left table even though you didn't filter on any of the left table's field values.
+
+If you're trying to count the number of types of beans in each recipe you can try a query like this, but it will completely omit recipes that have zero types of beans:
+
+``` sql
+SELECT recipe_id, COUNT(ingredient) as count 
+FROM recipes LEFT JOIN ingredients on recipes.id = ingredients.recipe_id
+WHERE LOWER(ingredient) LIKE '%bean%'
+GROUP BY recipe_id ORDER BY count ASC LIMIT 50;  -- lowest count is 1
+```
+
+The filtering in the `WHERE` clause happens after the join and removes all rows without beans thus removing the entire recipe.
+
+If you instead filter in the join clause, it will exclude all of the right table rows that don't match but still include all of the left table rows.
+
+``` sql
+SELECT recipes.id, COUNT(ingredient) as count
+FROM recipes LEFT JOIN ingredients ON recipes.id = ingredients.recipe_id AND LOWER(ingredients.ingredient) LIKE '%bean%'
+GROUP BY recipes.id ORDER BY count ASC LIMIT 50; -- lowest count is 0 
+```
+
+Notice this is filtering on values from the right table. I didn't try, but you should get the same behavior if filtering on values from the left table. 
+
+The other way I've found to get a proper count of zero for recipes that don't have beans was to separate the ingredient filtering into a sub-query that occurs before the join occurs.
+
+``` sql
+select recipes.id, COUNT(ingredient) as count
+FROM recipes LEFT JOIN
+ (SELECT recipe_id, ingredient FROM ingredients WHERE LOWER(ingredient) LIKE '%bean%') as bean_ing on recipes.id = bean_ing.recipe_id
+GROUP BY recipes.id ORDER BY count ASC LIMIT 50; -- lowest count is 0
+```
+
+This makes sure that the join happens after the ingredients are already filtered and allows the join to leave some records with null ingredients. This is unnecessary and likely performs worse.
+ 
+You have to make sure to use the recipe ID from the left table in the `SELECT` and `GROUP BY`. If you try to use `recipe_id` from the right table, it won't work the same. For the recipes with zero beans all field values from the right table will be null, so trying to group by them will result in one group. Trying to select from them will always select null.
+
+
+
+## Order of execution
+
+SQL clauses are not executed in the order they are written. These sites agree on the order: [1](https://www.shiksha.com/online-courses/articles/order-of-execution-in-sql/#:~:text=Since%20a%20lot%20of%20people,and%20finally%2C%20LIMIT%2FOFFSET.) [2](https://sqlbolt.com/lesson/select_queries_order_of_execution) [3](https://www.datacamp.com/tutorial/sql-order-of-execution) [4](https://www.sisense.com/blog/sql-query-order-of-operations/) [5](https://builtin.com/data-science/sql-order-of-execution). I haven't found any documentation from any database vendors that make this real clear. Maybe we can tell from the query plans.
+
+Let's try a query that is contrived to have all of the clauses. This query may not fully make sense, for example, the `DISTINCT` clause is unnecessary since the rows have already been grouped by ID.
+
+``` sql
+sqlite> select distinct recipe_id, count(*) count from ingredients where ingredient like '%tsp%' group by recipe_id having count > 0 order by count desc limit 50;
+QUERY PLAN
+|--SCAN ingredients
+|--USE TEMP B-TREE FOR GROUP BY
+|--USE TEMP B-TREE FOR DISTINCT
+`--USE TEMP B-TREE FOR ORDER BY
+```
+The query plan doesn't show all of the steps but the ones shown are in the same order stated on those web pages.
+
+Some of these orderings are rather intuitive. For example, you can't do the `HAVING` filtering or `ORDER BY` sorting until the values from the `GROUP BY` have been determined. Here is my assessment of the dependencies to try to rationalize the stated execution order: 
+
+<a href="/sqlClauseDependency.drawio.svg"><img src="/sqlClauseDependency.drawio.svg"/></a>
+
+All of the operations are focused on filtering, sorting, or aggregating rows except for `SELECT`. `SELECT` is a knife that cuts down through the layers of the cake that have been determined by the other operations. There are some subtle interactions between what is in the `SELECT` clause and what is in other clauses. For example, the aggregation results from the operations defined in the `SELECT` clause can be referred to in the `HAVING` and `ORDER BY` clauses even though the former's operation is executed before that of the `SELECT` clause's and the latter's is executed after. It appears that both `HAVING` and `ORDER BY` clauses can define their own aggregation functions and don't have to use the values aggregated according to the `SELECT` clause, although I assume they often would in practice. 
+
+
