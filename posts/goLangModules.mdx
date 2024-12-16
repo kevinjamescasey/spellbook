@@ -1,0 +1,303 @@
+---
+title: "Go Modules"
+originalPublishDate: "2024-12-16"
+type: reference
+topics: Golang, Go Programming Language
+lastUpdate: "2024-12-16"
+---
+
+This shows how to import a package's identifiers into another package by putting the packages in modules. It shows a few simple, but failed, attempts to import without using a module.
+
+### Cannot have second package in same directory ❌
+
+Since the `main` package is declared in `main.go` a different package cannot be declared in another file in the same directory.
+
+``` sh
+.
+├── main.go
+└── invalidPackage.go
+```
+
+### Cannot import package in subdirectory ❌
+
+The package declared in the file in the subdirectory cannot be imported into `main.go`because there is no module declared. 
+
+``` sh
+.
+├── main.go
+└── unimportablePackage
+    └── unimportablePackage.go
+```
+
+### Package in a module ✅ (importING and importED packages in the same module)
+
+This command will create a module by creating `go.mod` file.
+
+``` sh
+go mod init myModule/path
+```
+
+``` sh
+usage: go mod init [module-path]
+```
+
+It is not required to have a `/` in the module-path and the one in this example has no meaning beyond that of any other character. It is typical to use module names like `github.com/gitHubAccount/goModuleRepo` to ensure that your module name will not conflict with other modules when you share it with the world. The [module path](https://go.dev/ref/mod#module-path) also signifies the location and purpose of the module. So in a typical module-path the `/`s would indicate a parent-child relationship.
+
+`go.mod`
+``` go-module
+module myModule/path
+
+go 1.23.2
+```
+
+So now with a module defined, a package from a subdirectory can be imported.
+``` sh
+.
+├── go.mod
+├── main.go
+└── packageInModule
+    └── packageInModule.go
+```
+
+`main.go`
+
+``` go
+package main
+
+import "myModule/path/packageInModule"
+
+func main() {
+	packageInModule.Importable()
+}
+```
+
+`packageInModule.go`
+
+``` go
+package packageInModule
+
+func Importable() {
+	println("importable")
+}
+```
+
+Only [capitalized identifiers are exported](https://go.dev/ref/spec#Exported_identifiers) which makes them importable.  
+Also note that there is only one module and that both the `main` and `packageInModule` packages are in that sole module, so there is no `require` declaration required to make the package importable.
+
+Running the program looks like this:
+
+``` sh
+>go run .
+importable
+```
+
+### Cannot import from a different module without a `require` ❌
+
+If we instead create the module in the subdirectory, the `main` package will be excluded from the module.
+
+``` sh
+.
+├── main.go
+└── moduleWithUnimportablePackage
+    ├── go.mod
+    └── packageInModule.go
+```
+
+Now the `packageInModule` package cannot be imported into the `main` package. The `main` package is not in any module at all, so its (non-existent) module can not declare a dependency on the `myModule/path` module.
+
+
+You can try creating a module to contain the `main` 
+``` sh
+go mod init myMainModule
+go mod tidy
+```
+
+But the package will not be found because there is no `require` declaration describing the dependency on the module that contains the package.
+
+``` sh
+>go run .
+main.go:3:8: package myModule/path/moduleWithUnimportablePackage is not in std
+```
+You can try mapping the module path to the local subdirectory that contains the module... 
+``` sh
+go mod edit -replace myModule/path=./moduleWithUnimportablePackage
+```
+
+...and having the `go mod tidy` command add the dependency delcaration, but the package will not be found.
+``` sh
+>go mod tidy
+go: myMainModule imports
+        myModule/path/moduleWithUnimportablePackage: module myModule/path@latest found (v0.0.0-00010101000000-000000000000, replaced by ./moduleWithUnimportablePackage), but does not contain package myModule/path/moduleWithUnimportablePackage
+```
+
+The [module root directory](https://go.dev/ref/mod#modules-overview) of the `myModule/path` module is `./moduleWithUnimportablePackage`. Packages within a module cannot be directly in the module's module root directory, so it is trying to look for the package in a (non existent) subdirectory. 
+
+> The module root directory is the directory that contains the go.mod file.
+
+> A package path is the module path joined with the subdirectory containing the package (relative to the module root).
+
+That line from the language spec impies that every package needs to be in a subdirectory of its module's root directory.
+
+
+### Package in a different module ✅
+
+If a package is in a subdirectory of a module it can be imported into another package provided that the importing package's module has a `require` declaration to declare the dependency on the imported package's module.
+
+``` sh
+.
+├── go.mod
+├── main.go
+└── moduleWithImportablePackage
+    ├── go.mod
+    └── packageInModule
+        └── packageCode.go
+```
+
+In this case `go mod tidy` is able to find the package and add the required `require` declaration.
+
+``` sh
+>go mod tidy
+go: found myModule/path/packageInModule in myModule/path v0.0.0-00010101000000-000000000000
+```
+
+The requiring module has a `replace` declaration to describe the location of the module since this is not a typical module that would have its location indicated in its module-path.  
+The requiring module also has a `require` declaration to declare the dependency.
+
+`./go.mod`
+
+``` go-module
+module myMainModule
+
+go 1.23.2
+
+replace myModule/path => ./moduleWithImportablePackage
+
+require myModule/path v0.0.0-00010101000000-000000000000
+```
+
+In this case the required module's module-path isn't really a path to anything. It is just an identifier that the requiring module can refer to.
+
+`./moduleWithImportablePackage/go.mod`
+
+``` go-module
+module myModule/path
+
+go 1.23.2
+```
+
+The source code file for the imported package just declares a package name that matches the name of the file's directory. It doesn't have to match but it is more convenient if it does. The file's name is not referenced by anything.
+
+`./moduleWithImportablePackage/packageInModule/packageCode.go`
+
+``` go
+package packageInModule
+
+func Importable() {
+	println("importable")
+}
+```
+
+The importing package refers to the imported package by a [package path](https://go.dev/ref/mod#glos-package-path).
+
+`./main.go`
+
+``` go
+package main
+
+import "myModule/path/packageInModule"
+
+func main() {
+	packageInModule.Importable()
+}
+
+```
+
+The fist part of the package path is the module path, `myModule/path`, that refers to the module that contains the package. The last part of the package path ,`packageInModule`, refers to the subdirectory that contains the code files that contain all of the package's code. That reference is relative to the module's module root directory, `moduleWithImportablePackage`.
+
+<a href="/goModulesAndPackages.drawio.svg"><img src="/goModulesAndPackages.drawio.svg"/></a>
+
+Notice that the qualifier used in the importing package refers to the package name used in the package clause in the imported package. In this case that name matches the name of the directory that contains the package.
+
+
+#### Package split up into mutliple files 😐
+
+We could add more code for the same package in another file like so. It might be helpful to split an immense package into multiple files like this. 
+
+`./moduleWithImportablePackage/packageInModule/morePackageCode.go`
+
+``` go
+package packageInModule
+
+func AnotherImportable() {
+	println("another importable")
+}
+```
+
+#### Package clause not matching containing directory name 🤪
+
+Just for the curious, if the package named in the package clause does not match the name of the containing directory then the difference between PackageName and ImportPath in the [import declaration](https://go.dev/ref/spec#Import_declarations) becomes evident.
+
+`./moduleWithImportablePackage/packageInModule/packageCode.go`
+
+``` go
+package x
+
+func Importable() {
+	println("importable")
+}
+
+```
+
+`./main.go`
+``` go
+package main
+
+import "myModule/path/packageInModule"
+
+func main() {
+	x.Importable()
+	x.AnotherImportable()
+}
+```
+
+Notice that the imported identifiers are qualified by the name from the package clause (`x`) while the import path refers to the package's containing subdirectory (`packageInModule`).
+
+The package can also be imported with an explicit package name like this:
+
+`./main.go`
+
+``` go
+package main
+
+import y "myModule/path/packageInModule"
+
+func main() {
+	y.Importable()
+	y.AnotherImportable()
+}
+```
+
+Notice that the mame (`x`) in the package declaration and the name (`y`) in the import do not have to match and neither one of them match the name of the directory that contains the package's files (`packageInModule`).
+
+Trying to refer to the package by the subdirectory name used in the import path causes errors. ❌ 
+
+`./main.go`
+
+``` go
+package main
+
+import "myModule/path/packageInModule"
+
+func main() {
+	packageInModule.Importable()
+	packageInModule.AnotherImportable()
+}
+```
+
+``` sh
+~/projects/try-golang/package-example5>go run .
+# myMainModule
+./main.go:3:8: "myModule/path/packageInModule" imported as x and not used
+./main.go:6:2: undefined: packageInModule
+./main.go:7:2: undefined: packageInModule
+```
