@@ -3,7 +3,7 @@ title: "Learning Go"
 originalPublishDate: "2024-11-13"
 type: musing
 topics: Golang, Go Programming Language
-lastUpdate: "2024-12-02"
+lastUpdate: "2024-12-16"
 ---
 
 ## Is Go worth learning or using?
@@ -24,7 +24,7 @@ But I have to admit that while learning Go again there are many things about the
 
 The [W3 Schools Tutorial](https://www.w3schools.com/go/index.php) quickly covers the bare-bones basics that overlap with other popular languages. It doesn't get into the features that differentiate Go from the crowd.
 
-[A Tour of Go](https://go.dev/tour/list) covers those features and the [Get Started Tutorial](https://go.dev/doc/tutorial/getting-started) quickly introduces the official dependency management tools. [Effective Go](https://go.dev/doc/effective_go) gets into the weeds
+[A Tour of Go](https://go.dev/tour/list) covers those features and the [Get Started Tutorial](https://go.dev/doc/tutorial/getting-started) quickly introduces the official dependency management tools. [Effective Go](https://go.dev/doc/effective_go) gets into the weeds.
 
 
 ## Notable Language Design Choices
@@ -50,13 +50,17 @@ Most of these can be found in the official tour.
   - slices and maps aren't comparable with `==`
     - `reflect.DeepEqual` can compare them
 
-* package vs modules
+* [package vs modules](../go-modules)
     * package
         - exported names are made available in the file that their package is imported into
           - imported names are still qualified by the last element of their package's import path
         - package contents can be split up across several files all declaring the same package name
         - can't have two different package names declared in files in the same directory
         - good to have package name match containing directory name (last element of import path)
+        - one package can only reference another package through a module
+> import path: A string used to import a package in a Go source file. Synonymous with package path.  
+
+>package path: The path that uniquely identifies a package. A package path is a module path joined with a subdirectory within the module. For example "golang.org/x/net/html" is the package path for the package in the module "golang.org/x/net" in the "html" subdirectory. Synonym of import path.
     * module
         - versioned collection of packages
            - must use semver preceded by "v"
