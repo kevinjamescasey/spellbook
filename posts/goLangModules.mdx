@@ -106,7 +106,7 @@ If we instead create the module in the subdirectory, the `main` package will be 
 Now the `packageInModule` package cannot be imported into the `main` package. The `main` package is not in any module at all, so its (non-existent) module can not declare a dependency on the `myModule/path` module.
 
 
-You can try creating a module to contain the `main` 
+You can try creating a module to contain the `main` package 
 ``` sh
 go mod init myMainModule
 go mod tidy
