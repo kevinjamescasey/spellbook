@@ -123,7 +123,7 @@ You can try mapping the module path to the local subdirectory that contains the 
 go mod edit -replace myModule/path=./moduleWithUnimportablePackage
 ```
 
-...and having the `go mod tidy` command add the dependency delcaration, but the package will not be found.
+...and having the `go mod tidy` command add the dependency declaration, but the package will not be found.
 ``` sh
 >go mod tidy
 go: myMainModule imports
@@ -136,7 +136,7 @@ The [module root directory](https://go.dev/ref/mod#modules-overview) of the `myM
 
 > A package path is the module path joined with the subdirectory containing the package (relative to the module root).
 
-That line from the language spec impies that every package needs to be in a subdirectory of its module's root directory.
+That line from the language spec implies that every package needs to be in a subdirectory of its module's root directory.
 
 
 ### Package in a different module ✅
@@ -219,7 +219,7 @@ The fist part of the package path is the module path, `myModule/path`, that refe
 Notice that the qualifier used in the importing package refers to the package name used in the package clause in the imported package. In this case that name matches the name of the directory that contains the package.
 
 
-#### Package split up into mutliple files 😐
+#### Package split up into multiple files 😐
 
 We could add more code for the same package in another file like so. It might be helpful to split an immense package into multiple files like this. 
 
@@ -277,7 +277,7 @@ func main() {
 }
 ```
 
-Notice that the mame (`x`) in the package declaration and the name (`y`) in the import do not have to match and neither one of them match the name of the directory that contains the package's files (`packageInModule`).
+Notice that the name (`x`) in the package declaration and the name (`y`) in the import do not have to match and neither one of them match the name of the directory that contains the package's files (`packageInModule`).
 
 Trying to refer to the package by the subdirectory name used in the import path causes errors. ❌ 
 
