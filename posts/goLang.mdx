@@ -3,7 +3,7 @@ title: "Learning Go"
 originalPublishDate: "2024-11-13"
 type: musing
 topics: Golang, Go Programming Language
-lastUpdate: "2024-12-16"
+lastUpdate: "2025-01-11"
 ---
 
 ## Is Go worth learning or using?
@@ -75,6 +75,7 @@ Most of these can be found in the official tour.
     - collection of fields
     - like an object or a map with static keys
     - like C but can involve interfaces, methods, and polymorphism
+    - value is copied when assigned to variable (like primitive values are)
     - pointers to structs are implicitly dereferenced for dot notation member access
         - (sort of like how method receivers are implicitly derefrenced or address-of'ed)
     - created conveniently by struct literals with or without specified field names
@@ -123,7 +124,7 @@ type MyStruct struct {}
   - mainly to guarantee resource cleanup or logging despite errors occurring 🤷
   - sort of like a Python `with` block or `finally` block
 
-* uninitialized variables get zeroed values
+* uninitialized variables have a [zero values](https://go.dev/ref/spec#The_zero_value)
     - they differ by type
     - 0, 0.0, false, "", nil
     - structs get their fields zeroed
