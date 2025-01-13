@@ -1,0 +1,88 @@
+---
+title: "AWS Step Functions Evaluation"
+originalPublishDate: "2025-01-13"
+type: reference
+topics: AWS Step Functions
+lastUpdate: "2025-01-13"
+---
+
+
+## Pros
+* Convenient free UI allows someone unfamiliar to easily see the work flow and current state of executions
+  - don't have to look for code and documentation
+  - especially useful during prod support
+
+* Keeps track of very long running executions without having to manage state yourself in persistent stores
+
+
+## Cons
+
+* The UI is only available to technical staff that use the AWS console
+
+* Customizability of UIs and integrations could be much better if you keep the execution state of workflows in your own custom database and buid your own custom web API
+
+* Everything baked into the the proprietary workflow logic is difficult to break apart for component testing
+  - you can test individual Lambda functions, Batch jobs, etc but the workflow logic only runs in the AWS Step Functions service
+
+* Authoring is done in visual workflow editor, but then merging and conflict resolution are done in JSON text files
+
+* Workflow logic is heavily proprietary and not portable
+  - Switching to ECS or something oustide of AWS will require rewriting
+  
+* Can't use any existing static analysis tools on workflow logic
+  - linters
+  
+* Can't import libraries into workflow logic
+  - third party library repositories don't exist?
+  - reuse by copy-paste
+
+* Can't benefit from the decades of design through from object oriented or functional paradigms
+  - purely procedural
+  - missing basic compositional abstractions like functions
+
+* Extra layer of technology that has to be learned and context switched in addition to what is used in your Lambda functions and containers
+  - Teams often avoid using multiple programming language ecosystems for this reason
+
+## Equivalences
+
+* Arrow to next step
+  - two subsequent lines of code
+  - queues between steps
+
+* Braching arrows
+  - any condtional logic like `if` or `switch case` blocks
+
+* Execution log
+  - regular logs or database state
+
+* Current execution state
+  - regular logs, database state, and persisttent queues
+
+* Wait states
+  - event based or polling triggers
+  
+* Parallel states
+  - multiple parallel queue consumers
+  - async IO (e.g. making web calls in JavaScript)
+  - any concurrency mechanism in any programming language
+
+## When to avoid
+
+Step Functions are not needed for very simple workflows like a series of non-branching steps.
+
+For very complicated workflows it is probably better to store custom state or make custom UIs.
+
+[3 pitfalls](https://www.readysetcloud.io/blog/allen.helton/when-not-to-use-step-functions/)
+    - large amounts of data being passed around
+    - large amounts of parallel processing
+    - requires additional adapter layers built out of Lambda functions for integrations
+
+
+## The Niche
+
+Step Functions might be ideal ...
+For medium complexity workflows with a little bit of branching logic or waiting for human interaction.
+For workflows that will not be developed into something more substational and will always be managed by an IT team rather than end users.
+
+
+
