@@ -3,35 +3,47 @@ title: "Programming Language Interfaces"
 originalPublishDate: "2024-12-02"
 type: musing
 topics: programming, interfaces, expression problem, open-closed principle, protected variations, information hiding, DRY
-lastUpdate: "2024-12-03"
+lastUpdate: "2025-01-13"
 ---
-
 
 What are interfaces in programming languages and why do they exist?
 
 ## Motivation
 
 It starts with the Don't Repeat Yourself (DRY) principle. Programmers want to write generic code that can be reused in many different ways. If you break it down into operations and data, there are a couple strategies to help achieve DRYness.
-1. You can try to write generic operations that work on many different data types including data types that don't yet exists. That way when a new data type is needed to handle new data in some way that existing data types can't, the generic operations can be reused on the new data type.
-2. You can write generic data types that can be reused for data in many situations. That way when new programs are written they can take advantage of all of the existing operations that already work on the existing data types. And if new operations are written for those existing data types, they can be applied to any past and future data that was or will be stored in those data types.
+1. You can try to write generic operations that work on many different data types including data types that don't yet exists. That way when a new data type is needed to handle new data in some way that existing data types can't, the generic operations can be reused on the new data type.  
+  Example: Sorting items into sequential order. Notice how this would only be useful on data types that are capable of maintaining sequential order.
+2. You can write generic data types that can be reused for data in many situations. That way when new programs are written they can take advantage of all of the existing operations that already work on the existing data types. And if new operations are written for those existing data types, they can be applied to any past and future data that was or will be stored in those data types.  
+  Example: How associative and sequential types in many languages are reused in many situations. This is especially idomatic in Clojure where maps and vectors are used for most data.
 
-In either case you need to be aware of what already exists and recognized that it can be reused.
+In either case you need to be aware of what already exists and recognize that it can be reused.
 
-The desire to allow both options above is known as the Expression Problem. Language authors want to allow
+The desire to allow both options above is sometimes called the [Expression Problem](https://wiki.c2.com/?ExpressionProblem). Language authors want to allow
 1. Adding new data types that work with existing operations.
 2. Adding new operations that work with existing data types.
 
-In both cases they want to adhere to the Open-Closed principle. They want the new things to be added without modifying any of the existing things, so that the existing things are closed for modification, but the overall system is still open for extension.
+In both cases they want to adhere to the Open-Closed principle. They want the new things to be added without modifying any of the existing things, so that the existing things are closed for modification, but the overall system is still open for extension. Exsisting things are the structures in the code such as control flow statements or functions. Just including new code beside existing code in a new executable is not considered modification. 
 
-There is no magic that allows code to just work for all future data types. The operation might be so abstract that it only takes on a specific meaning with the added context of a specific data type. For example, a `print` operation might mean showing the digits for a number type (converting binary bits to decimal digits), showing the characters for a string type (sequentially in order), or recursively showing elements contained within brackets for a nested collection type. So a straight forward way to  allow new data types to be used with exist operations is to create a new implementation of the operation but still use the same operation name. It is cheating. If we're not really getting operation reuse, what is the point?
+## Achieving goal (1) 
+Achieving (1) is difficult because there is no magic that allows code to just work for all future data types. The operation might be so abstract that it only takes on a specific meaning with the added context of a specific data type. For example, a `print` operation might mean showing the digits for a number type (converting binary bits to decimal digits), showing the characters for a string type (sequentially in order), or recursively showing elements contained within brackets for a nested collection type. So we're not really getting reuse of the same implementation of an operation. We're getting a new implementation of the operation for each new data type. We're getting reuse of an operation's name and the abstract concept that that name represents. So did we achieve (1)?
 
-When you consider composability of code then you have to think about the code that calls/invokes the operations. If the calling module has some algorithm that requires a certain operation, then it is possible that the algorithm will still work correctly when invoking different implementations of the same operation on different data types. For example, if the algorithm calls a `serialize` operation to get a character representation of the data that can be written to storage or network, then the algorithm doesn't need to know which data type is being used or the details of how the type is serialized. So while the implementations for `print` or `serialize` may not be generic -- they have to be reimplemented for each data type -- the operations that use those operations can be made generic if they are protected from having to change due to the variations in those data types because the details of those data types are hidden from them. The only thing required to make the calling operations generic is to allow them to make the same invocation regardless of the data type being used. In every language I've seen invocations are expressed by stating the name of the operation and listing the arguments. So how does the compiler or interpreter know which operation implementation to use? How does it provide the polymorphic behavior of dispatching to the correct operation implementation for each data type?
+When you consider composability of code then you have to think about the code that calls/invokes the operations. If the calling module has some algorithm that requires a certain operation, then it is possible that the algorithm will still work correctly when invoking different implementations of the same operation on different data types. For example, if the algorithm calls a `serialize` operation to get a character representation of the data that can be written to storage or network, then the algorithm doesn't need to know which data type is being used or the details of how the type is serialized. So while the implementations for `print` or `serialize` may not be generic -- they have to be reimplemented for each data type -- the operations that use those operations can be made generic if they are protected from having to change due to the variations in those data types because the details of those data types are hidden from them. The only thing required to make the calling operations generic is to allow them to make the same invocation regardless of the data type being used. In every language I've seen invocations are expressed by stating the name of the operation and listing the arguments. So how does the compiler or interpreter know which operation implementation to use? How does it provide the polymorphic behavior of dispatching to the correct operation implementation for each data type? So if we can answer those questions we may be able to achieve (1) for the operations that call the operations that get new implementations for each new data type.
 
-## Object methods without compile time type checking
+(reusable calling op handed a new data type) -> (polymorphic op) -> (appropriate implementation for data type)
+
+If we can achieve polymorphic dispatch and we can find a way to instantiate and pass in new types to the calling operation, then we have achieved resuability of that operation's implementation.
+
+There are possible ways to use a new data type without changing existing code to create instances of the new type. If the new type includes operations that initialize the instances from an already used data type, like a string read from a file that the new type knows how to unmarshal, the existing code will not have to know those details. Existing code will still have to know when to use the new type. If the existing code reads the class name of the new type from the data and uses a reflection mechanism to instantiate an instance of that class then it will not have to change for new classes. The same thing could be achieved in a classless language if the data explicitly names a consctructor function. For example, in JavaScript a factory method could be called like `obj[factoryMethod](genericInitializationData)` where `factoryMethod` is a string read from a file. The factory methods available in `obj` could have all been read in from separate files in a directory. Is it worth it to take these measures to solve the Expression Problem and adhere to the Open-Closed principle? Is it a good idea to include class or method names in your data or is it just pushing the problem out of the code and into the data? Is there code somewhere outside the program that has to be updated to make that data? Blurring the line between data and code like this can seem powerful, but it can also obscure what is really happening and lead to untested production functionality because it is more difficult to test code that nobody realizes is code. These types of mechanisms were involved in the [2024 Crowdstrike Windows Outage](https://en.wikipedia.org/wiki/2024_CrowdStrike-related_IT_outages#Background). People have long discussed the dangers of passing untested code into interpreters such as using JavaScript's `eval()`. The examples described above of just naming existing functions or classes are far more constrained and less dangerous than these last two examples. Many depenendency injection frameworks exist that can help instantiate and pass data objects into where they are needed. Some of them can find all compatible types defined in files within a directory. So they could be helpful for introducing new types into a system, but some mechanism would still be needed for deciding precisely when and where to use those types. 
+
+## Polymorphic Dispatch
+
+Calling the appropriate operation implementation for the given data
+
+### Object methods without compile time type checking
 
 Without compile time type checking preventing us we can just pass in objects to the calling operation that have the appropriate methods. Then the calling operation can invoke the method in the same way regardless of the data type or operation implementation. This can be done, for example, in JavaScript and Python. The relationship between the data type and the method (operation implementation) are pre-configured so that the method comes along already attached to the data. There is no need for a compiler to check any interface declarations or any inheritance relationship. So there is no need for the programmer to define either of those. There is no need for any matching or conditional logic to determine the correct operation implementation.
 
-## Object methods with compile time type checking
+### Object methods with compile time type checking
 
 If the compiler checks all the data types then it knows which type is being used and it knows which implementation of the operation to use. But if the calling operation is hard-coded to use a specific data type then its code would have to change for each data type thus violating the Open-Closed principle and failing to solve the Expression Problem. In this case you need to create an interface type to tell the compiler which operations are allowed to be called on the type and the compiler will ensure that any type that could potentially be used has implementations for all of the operations that might be called. New data types can be created later that adhere to the rules declared by the interface type. The data type used can be determined at runtime as long as all of the candidate data types adhere to the interface type. This allows the type of data that is ultimately used to be chosen elsewhere.
 
@@ -41,7 +53,7 @@ Why can't the compiler infer the interface type from the operations that are pot
 
 Now we know that an interface is a type that a programmer uses to satisfy a compile time type checker. It may also be useful for the person reading the code to see where the interface type is used and which operations the concrete types need to have.
 
-## Other polymorphic dispatch techniques
+### Other polymorphic dispatch techniques
 
 Python [multiple dispatch](https://stackoverflow.com/questions/66711586/is-there-any-difference-between-multimethod-and-multipledispatch)  
 JavaScript [multimethods](https://github.com/caderek/arrows/tree/master/packages/multimethod)  
@@ -53,6 +65,20 @@ Clojure [protocols](https://clojure.org/reference/protocols)
     - must be the reason it requires declaration before use
     - since it is being invoked like a function you have to tell the compiler to treat it like a method
 
+
+## Achieving goal (2)
+
+We've already discovered that interfaces exist to allow statically type-checked languages to achieve the first (1) goal of the expression problem. They're all about reusing a known set of abstract operations for different data types. We may also be curious about the second goal.
+
+It seems rather easy to achieve (2) in procedural code just by writing new functions/routines, but how is that useful unless you change existing code to call the new code? (Maybe it can be done with some extension/plugin mechanism where the user chooses wich code to run.) In a language like Java where the only way to access data is through methods defined in classes, (2) can only be achieved by modifying existing classes.
+
+
 ## Summary
 
-Interfaces facilitate polymorphism mainly in languages with compile time type checking. Polymorphism facilitates writing generic code that adheres to the Open-Closed principle which facilitates reuse instead of repeated rewriting. 
+Interfaces facilitate polymorphism mainly in languages with compile time type checking. Polymorphism facilitates writing generic code that adheres to the Open-Closed principle which facilitates reuse instead of repeated rewriting.
+
+When adding new data types or operations avoiding modification of existing constructs is desired (Open-Closed Princple). It can be achieved in part in different ways in different programming paradigms, but to make the new code useful it still requires some way of calling the new operations or creating instances of the new data types.
+
+
+
+
