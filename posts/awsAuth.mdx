@@ -1,0 +1,80 @@
+---
+title: "AWS Authn/z Overview"
+originalPublishDate: "2025-01-22"
+type: reference
+topics: AWS
+lastUpdate: "2025-01-22"
+---
+
+This lists a myriad of ways to control access in AWS to primarily custom services. It is also relevant to AWS services and ultimately data that is accessed through services.
+
+### Identity
+
+These tend to be for human users
+
+- IAM users
+- Cognito User Pools
+- Cognito Federated Identities
+- [IAM identity provider federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html)
+- [IAM Identity Center](https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html)
+
+These are for machines
+
+- Lamda execution roles
+- Container execution roles
+- EC2 instance roles
+- store credentials
+- [IAM roles anywhere](https://docs.aws.amazon.com/rolesanywhere/latest/userguide/introduction.html)
+
+### Access Control
+
+#### Access barriers
+
+Rejecting or allowing requests. Tying authentication to authorization.
+
+- [API Gateway REST API Access Control](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html) various methods
+  - Lambda Authorizer
+  - ...
+- [API Gateway HTTP API Access Control](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-access-control.html) various methods
+  - Lambda Authorizer
+  - ...
+- [Cognito User Pool](https://docs.aws.amazon.com/cognito/latest/developerguide/accessing-resources.html) delegates to other services that accept JWTs
+- [API Gateway REST API + Cognito User Pool or OIDC + Verified Permissions](https://aws.amazon.com/blogs/security/authorize-api-gateway-apis-using-amazon-verified-permissions-and-amazon-cognito/)
+- [ALB authentication](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html) ([blog](https://aws.amazon.com/blogs/networking-and-content-delivery/security-best-practices-when-using-alb-authentication/))
+- [Appsync](https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html)
+  - Lambda Authorizer
+  - ...
+- [API Gatewya REST API client certificates](https://docs.aws.amazon.com/apigateway/latest/developerguide/rest-api-mutual-tls.html)
+- run a reverse proxy on compute resources
+  - [example: VPC Lattice + Envoy](https://aws.amazon.com/blogs/security/modern-web-application-authentication-and-authorization-with-amazon-vpc-lattice/)
+- in the end service
+  - [example: Quarkus + EKS](https://aws.amazon.com/blogs/security/access-token-security-for-microservice-apis-on-amazon-eks/)
+  - [example: call AWS Verified Permissions](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/authorization-sdk.html)
+
+#### Authorization configuration
+
+Configuring permissions with policies, rules, and mappings
+
+- claims and scopes from identity providers
+- IAM role policies
+- IAM user groups
+- IAM rules based on resource tags (depends on how fine grained the resources can be tagged) ([ABAC blog](https://www.nccgroup.com/us/research-blog/introduction-to-aws-attribute-based-access-control/))
+- [AppSync query, mutation, and field level](https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html#using-additional-authorization-modes)
+- [AppSync data level](https://docs.aws.amazon.com/appsync/latest/devguide/security-authorization-use-cases.html)
+- [Verified Permissions](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/what-is-avp.html)
+
+##### Mapping authorization config
+
+Mapping some authorization config to AWS IAM permissions
+
+- [Cognito Identity Pool ABAC](https://docs.aws.amazon.com/cognito/latest/developerguide/attributes-for-access-control.html)
+- [Cognito Identity Pool RBAC](https://docs.aws.amazon.com/cognito/latest/developerguide/role-based-access-control.html)
+
+Mapping AWS IAM credentials to something else
+
+- Exchange AWS credentials for other AWS Credentials: assume role
+- Echange AWS credentials for tokens: [service bearer tokens](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_bearer.html) (esoteric)
+
+Giving something else permissions?
+
+- PassRole
