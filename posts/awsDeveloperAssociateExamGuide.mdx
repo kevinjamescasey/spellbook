@@ -3,7 +3,7 @@ title: "AWS Developer Associate Exam Guide"
 originalPublishDate: "2025-01-13"
 type: reference
 topics: AWS
-lastUpdate: "2025-01-13"
+lastUpdate: "2025-01-22"
 ---
 
 # AWS Certified Developer - Associate
@@ -692,6 +692,9 @@ By using this solution, users can reduce the risk of security breaches and compl
 ## Extra details
 
 [official guide](https://d1.awsstatic.com/training-and-certification/docs-dev-associate/AWS-Certified-Developer-Associate_Exam-Guide.pdf)
+[practice questions](https://www.examtopics.com/exams/amazon/aws-certified-developer-associate-dva-c02/view/)
+[practice questions](https://www.examtopics.com/exams/amazon/aws-certified-developer-associate/view/)
+[cheat sheets](https://digitalcloud.training/category/aws-cheat-sheets/aws-developer-associate/)
 
 ### Domain 1: Development
 
@@ -722,3 +725,120 @@ By using this solution, users can reduce the risk of security breaches and compl
 - [AWS service metrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
 - [X-Ray application instrumentation](https://docs.aws.amazon.com/xray/latest/devguide/xray-instrumenting-your-app.html)
 - [Example SNS filer policy](https://docs.aws.amazon.com/sns/latest/dg/example-filter-policies.html)
+
+### Random stuff found through other training sources
+
+- [Serverless Application Repository (SAR)](https://docs.aws.amazon.com/serverlessrepo/latest/devguide/what-is-serverlessrepo.html)
+- [S3 PutObject encryption headers](https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html#API_PutObject_RequestParameters)
+
+| type                                                                                                 | x-amz-server-side-encryption | key header                                  | algorithm header                                 |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------- | ------------------------------------------------ |
+| [SSE-S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/specifying-s3-encryption.html)        | AES256                       |                                             |
+| [SSE-MKS](https://docs.aws.amazon.com/AmazonS3/latest/userguide/specifying-kms-encryption.html)      | aws:kms                      | x-amz-server-side-encryption-aws-kms-key-id |
+| [DSSE-KMS](https://docs.aws.amazon.com/AmazonS3/latest/userguide/specifying-dsse-encryption.html)    | aws:kms:dsse                 | x-amz-server-side-encryption-aws-kms-key-id |
+| [SSE-C](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerSideEncryptionCustomerKeys.html) |                              | x-amz-server-side​-encryption​-customer-key | x-amz-server-side​-encryption​-customer-algorith |
+
+- [scaling for SQS](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-using-sqs-queue.html#scale-sqs-queue-custom-metric)
+- [CloudWatch metric math](https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-target-tracking-metric-math.html)
+- [ALB access logs](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html)
+- [IAM policy variables](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html)
+- [API Gateway Caching](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html)
+- ELB within one region only
+- ASG across regions?
+- EBS connects only to EC2 instances in the same AZ. io1/io2 can attached to 16 instances at once
+- EFS connects to Linux EC2 instances across different AZs. 3x costs of EBS. storage size scales automatically
+- [Step Functions wait for callback token](https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html#connect-wait-token)
+- [Step Functions activity worker polling](https://docs.aws.amazon.com/step-functions/latest/dg/concepts-activities.html)
+- [Step Functions express async vs sync](https://docs.aws.amazon.com/step-functions/latest/dg/choosing-workflow-type.html#express-at-least-once-execution)
+- [Cognito Sync](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-sync.html) sync app data across devices (replaced by AppSync)
+- [STS GetSessionToken](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html) exchange (ID + secret + MFA code) for temp (ID + secret + session token)
+- SSM Parameter Store is hierarchical and automatically versioned
+- Secrets Manager allows cross region replication and automatic rotation by Lambda. Integrates with RDS, Redshift, and DocumentDB.
+- [Nitro Enclaves](https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave.html)
+- [aws:SecureTransport](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-securetransport)
+- [Cloudwatch metric filter](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html) create metrics from logs
+- [CloudWatch logs subscription filter](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Subscriptions.html) filter seems mandatory but can match everything
+- [SNS subscription filter](https://docs.aws.amazon.com/sns/latest/dg/sns-message-filtering.html) optional filter
+- CloudWatch Evidently (discontinued/deprecated) - feature flags, A/B testing, config for percent or specific user
+- CodeCommit (discontinued/deprecated) - shared hosted Git repositories
+- Resource based policies are great for giving one service access to another (let Lambda read from SQS)(let S3 invoke Lambda) or giving another account access to the resource (doesn't require AssumeRole)
+- Lambda function in public subnet cannot access the Internet and doesn't get a public IP. In a private subnet it can access the Internet through a NAT
+- write throttles on GSI also throttle main DynamoDB table
+- [CodeDeploy deployment types](https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments.html)
+  - EC2: in place or blue/green (different group behind same load balancer (Stephane says different ASG, but I think target group))
+  - ECS: blue/green only (different target group behind same load balancer)
+  - Lambda: blue/green only (different version behind same Alias)
+- [CodeDeploy deployment configurations](https://docs.aws.amazon.com/codedeploy/latest/userguide/deployment-configurations.html#deployment-configuration-server)
+  - blue/green for ECS or Lambda: linear, canary, or all-at-once
+  - blue/green or in place for EC2: AllAtOnce, HalfAtATime, OneAtATime
+- CodeDeploy ECS steps (before and after for each): Install, AllowTestTraffic, AllowTraffic
+- CodeDeploy Lambda steps (before and after for each): AllowTraffic
+- [CodeDeploy EC2 steps](https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html#appspec-hooks-ecs): ApplicationStop, DownloadBundle, Install + b&f, ApplicationStart, ValidateService, BlockTraffic + b&f, AllowTraffic + b&f
+- Memcached engine does not support encryption or high availability (replication).
+- Redis supports encryption, read replicas, sharing, geospatial queries, data structures
+- [Redis cluster mode](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Replication.Redis-RedisCluster.html) has multiple shards. Can scale beyond single node storage limits. Spreads load to more nodes
+- [RDS storage capacity auto-scaling](https://aws.amazon.com/about-aws/whats-new/2019/06/rds-storage-auto-scaling/)
+- [RDS Aurora reader replica auto-scaling](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html)
+- [RDS Aurora global database](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html) up to 5 cross region read replica clusters
+- [Kinesis Agent](https://docs.aws.amazon.com/streams/latest/dev/writing-with-agents.html) pushes logs into streams
+- [STS can decode IAM error messages](https://docs.aws.amazon.com/cli/latest/reference/sts/decode-authorization-message.html)
+
+#### Root of project config
+
+Beanstalk
+
+- .ebextensions/elastic-cache.config
+- .ebextensions/xray-daemon.config
+
+CodeBuild
+
+- buildspec.yaml
+
+CodeDeploy
+
+- appspec.yaml
+
+SAM environments
+
+- samconfig.toml
+
+#### sizes
+
+https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html
+
+- 50:1 max IOPS:GiB ratio for Provisioned IOPS SSD (io1)
+- 3:1 linear IOPS:GiB ratio for General Purpose SSD (gp2)
+- 100 - 1600 OPS for General Purpose SSD (gp2)
+- 90 days default retention for CloudTrail events
+- [5/1 minute granularity EC2 basic/detailed monitoring metrics](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/manage-detailed-monitoring.html) (no RAM metrics)
+- 1 second/minute minimum resolution high/standard resolution CloudWatch metrics
+- 10,30 seconds period for CloudWatch alarm on high-resolution metric
+- n\*60 seconds normal period for CloudWatch alarm
+- infinite default CloudWatch logs retention
+- 1 request + 5% each second X-Ray default sampling rate
+- 4k max size of data that can be diretly encrypted or decrypted by KMS
+- 4K max size for all environment variables combined for one Lambda function
+- 128MB - 10GB RAM for a Lambda function
+- first 1 million Lambda calls or 400k GB-seconds free per month for Lambda functions (400k - sec for 1 GB) (3.2 million for 128 MB)
+- 1 sec - 15 min Lambda timeout
+- 10 batches per Kinesis shard processed at a time by Lambda
+- 1000 batches per SQS quueue processed at a time by Lambda (60 instances added per minute)
+- 1 - 256k SQS message size
+- millions/thousands of request per second and max execution time of 1ms/10s for CloudFront - Functions/Lambda@Edge
+- 1792MB Lambda function memory to get 1 full vCPU (more than that requires multithreading to - gain performance)
+- 10GB max size container image for Lambda function
+- 512MB - 10GB /tmp space for Lambda function
+- 1000 default max reserved concurrency for Lambda
+- 50/250 MB compressed/uncompressed max deployment size for Lambda function
+- 400KB max DynamoDB item size
+- 1k DynamoDB write capacity unit for 1 write per second
+- 4k DynamoDB read capacity unit for 1 consistent read per second or 2 regular reads per - second
+- 1MB DynamoDB max query or scan results size
+- 25 items max PutItem or DeleteItem and 16MB max write in one BatchWriteItem (no UpdateItem)
+- 100 items or 16MB max BatchItemRead
+- 50 - 29,000 ms (29 seconds) max timeout for API Gateway
+- 3600s (1hr) API Gateway max caching time (default 300s)
+- .5 - 237 GB API Gateway cache size
+- 10k requests per second
+- [500MB max size of zingle zip(or WAR) file for BeanStalk](https://docs.aws.amazon.com/- elasticbeanstalk/latest/dg/applications-sourcebundle.html)
+- 15 Aurora replicas max
