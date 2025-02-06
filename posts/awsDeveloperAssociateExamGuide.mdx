@@ -729,7 +729,7 @@ By using this solution, users can reduce the risk of security breaches and compl
 ### Random stuff found through other training sources
 
 - [Serverless Application Repository (SAR)](https://docs.aws.amazon.com/serverlessrepo/latest/devguide/what-is-serverlessrepo.html)
-- [S3 PutObject encryption headers](https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html#API_PutObject_RequestParameters)
+- [S3 PutObject encryption headers](https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html#API_PutObject_RequestParameters) (It is probably best to add a bucket policy that ensures uploads have headers to request a specific SSE so the uploading client doesn't override the bucket config's SSE)
 
 | type                                                                                                 | x-amz-server-side-encryption | key header                                  | algorithm header                                 |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------- | ------------------------------------------------ |
@@ -782,6 +782,22 @@ By using this solution, users can reduce the risk of security breaches and compl
 - [RDS Aurora global database](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html) up to 5 cross region read replica clusters
 - [Kinesis Agent](https://docs.aws.amazon.com/streams/latest/dev/writing-with-agents.html) pushes logs into streams
 - [STS can decode IAM error messages](https://docs.aws.amazon.com/cli/latest/reference/sts/decode-authorization-message.html)
+- [Lambda context has info like awsRequestId](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-context.html)
+- [CloudFront Viewer Protocol Policy](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-viewers-to-cloudfront.html)
+- [CloudFront Origin Protocol Policy](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-cloudfront-to-custom-origin.html)
+- [CloudFront origin access control (OAC)](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html) authn/z for S3 buckets (replaces OAI)
+- CloudFront Origin Cache Policy controls what is in the cache key
+- CloudFront Origin Request Policy controls further controls what is sent to origin
+- [X-Ray API search by attributes](https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html) GetTraceSummaries accepts filter expressions. Optional segment fields include `user`, `annotations` (indexed for search), and `metadata` (not indexed)
+- [login to ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html) `aws ecr get-login-password | docker login`
+- [Lambda@Edge functions can only be created in the us-east-1 Region](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-edge-how-it-works-tutorial.html#lambda-edge-how-it-works-tutorial-create-function)
+- [BatchGetItem can fetch from multiple tables in one request](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_BatchGetItem.html#API_BatchGetItem_Examples)
+- Sig V4 query string parameter: X-Amz-Signature
+- [custom API Gateway domain names](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html) just let you customize the path for the root of your API. You still have to [update your DNS provider to direct the domain traffic to the API](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-api-gateway.html)
+- [AWS Encryption SDK allows caching of KMS data key material](https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/data-key-caching.html)
+- [BeanSTalk platforms](https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html) Docker , various web serviers, and various programming languages [(multi-container is now called ECS)](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker_ecs.html)
+- Does CodeStar still exist? It is supposed to be some CI/CD overview tool
+- DAX cluster solves hot key problem by caching in an in-memory cluster with a 5 min TTL be default. It stores DynamoDB results, but not arbitrary data from your code. Select node size and network locations
 
 #### Root of project config
 
@@ -789,6 +805,7 @@ Beanstalk
 
 - .ebextensions/elastic-cache.config
 - .ebextensions/xray-daemon.config
+- [cron.yaml](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features-managing-env-tiers.html)
 
 CodeBuild
 
@@ -802,43 +819,80 @@ SAM environments
 
 - samconfig.toml
 
-#### sizes
+#### Amounts
 
-https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html
+EC2
 
-- 50:1 max IOPS:GiB ratio for Provisioned IOPS SSD (io1)
-- 3:1 linear IOPS:GiB ratio for General Purpose SSD (gp2)
-- 100 - 1600 OPS for General Purpose SSD (gp2)
-- 90 days default retention for CloudTrail events
+- [EBS](https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html)
+
+  - gp3/gp2: 1 GiB - 16 TiB; 100 - 16,000 IOPS; 1,000/250 MiB/s
+  - io2/io1: 4 GiB - 64 TiB; 256,000/64,000 IOPS ; 4,000/1,000 MiB/s
+  - st1/sc1 (HDD not bootable): 125 GiB - 16 TiB; 500/250 IPS; 500/250 MiB/s
+  - gp2: linear 3:1 max IOPS:GiB ratio; max IOPS reached at 5334 GB
+  - gp3: independent size and speed
+  - io1: max ratio 50:1 max IOPS:GiB ratio; max IOPS reached at 1,280 GiB
+  - io2: linear 1000:1 max IOPS:GiB ratio; max IOPS reached 256 GiB
+
 - [5/1 minute granularity EC2 basic/detailed monitoring metrics](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/manage-detailed-monitoring.html) (no RAM metrics)
+
+CloudWatch
+
 - 1 second/minute minimum resolution high/standard resolution CloudWatch metrics
 - 10,30 seconds period for CloudWatch alarm on high-resolution metric
 - n\*60 seconds normal period for CloudWatch alarm
 - infinite default CloudWatch logs retention
+
+CloudTrail
+
+- 90 days default retention for CloudTrail events
+
+X-Ray
+
 - 1 request + 5% each second X-Ray default sampling rate
+
+KMS
+
 - 4k max size of data that can be diretly encrypted or decrypted by KMS
+
+Lambda
+
 - 4K max size for all environment variables combined for one Lambda function
 - 128MB - 10GB RAM for a Lambda function
-- first 1 million Lambda calls or 400k GB-seconds free per month for Lambda functions (400k - sec for 1 GB) (3.2 million for 128 MB)
+- first 1 million Lambda calls or 400k GB-seconds free per month for Lambda functions (400k sec for 1 GB) (3.2 million sec for 128 MB)
 - 1 sec - 15 min Lambda timeout
 - 10 batches per Kinesis shard processed at a time by Lambda
 - 1000 batches per SQS quueue processed at a time by Lambda (60 instances added per minute)
-- 1 - 256k SQS message size
-- millions/thousands of request per second and max execution time of 1ms/10s for CloudFront - Functions/Lambda@Edge
 - 1792MB Lambda function memory to get 1 full vCPU (more than that requires multithreading to - gain performance)
 - 10GB max size container image for Lambda function
 - 512MB - 10GB /tmp space for Lambda function
 - 1000 default max reserved concurrency for Lambda
 - 50/250 MB compressed/uncompressed max deployment size for Lambda function
+- millions/thousands of request per second and max execution time of 1ms/10s for CloudFront Functions/Lambda@Edge
+
+SQS
+
+- 1 - 256k SQS message size
+
+DynamoDB
+
 - 400KB max DynamoDB item size
 - 1k DynamoDB write capacity unit for 1 write per second
 - 4k DynamoDB read capacity unit for 1 consistent read per second or 2 regular reads per - second
 - 1MB DynamoDB max query or scan results size
 - 25 items max PutItem or DeleteItem and 16MB max write in one BatchWriteItem (no UpdateItem)
 - 100 items or 16MB max BatchItemRead
+
+API Gateway
+
 - 50 - 29,000 ms (29 seconds) max timeout for API Gateway
 - 3600s (1hr) API Gateway max caching time (default 300s)
 - .5 - 237 GB API Gateway cache size
 - 10k requests per second
+
+BeanStalk
+
 - [500MB max size of zingle zip(or WAR) file for BeanStalk](https://docs.aws.amazon.com/- elasticbeanstalk/latest/dg/applications-sourcebundle.html)
-- 15 Aurora replicas max
+
+RDS
+
+- 15 read replicas max (both Aurora and not)
