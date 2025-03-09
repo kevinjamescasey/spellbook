@@ -3,7 +3,7 @@ title: "Popular Containerization Essentials"
 originalPublishDate: "2024-10-06"
 type: reference, learning
 topics: containers, docker, kubernetes, virtual machines, colima
-lastUpdate: "2024-10-23"
+lastUpdate: "2025-03-08"
 images:
     - ./containersOnOptionalLayers.jpg
     - ./containersThreeWaysOnOneMachine.jpg
@@ -55,7 +55,7 @@ These tools make it easy to run containers on your local machine and make it eas
 Since container technology as defined by the [Open Container Initiative](https://opencontainers.org/) (part of Linux Foundation) and using [runc](https://github.com/opencontainers/runc) relies on Linux, virtual machines are often required on non-Linux OSes. These tools either provide or require the creation of Linux VMs which make it possible to run containers on non-Linux OSes.
 
 ``` shell
-brew installl docker colima minikube kubectl
+brew install docker colima minikube kubectl
 ```
 
 #### Docker Desktop
@@ -66,7 +66,7 @@ The Homebrew `docker` package installs the CLI, but not the engine. If you want 
 
 Download it from [install Docker Desktop](https://docs.docker.com/desktop/install/mac-install/) or install it with
 ``` shell
-brew info --cask docker
+brew install --cask docker
 ```
 
 #### Colima
@@ -92,8 +92,13 @@ These features allow you to create, view, and switch between multiple instances.
   + `minikube profile list` and `colima list` to see the profiles
   + `minikube profile PROFILE-NAME` to switch profiles
 + Docker CLI can use environment variables to determine which server to issue commands to. You can use `eval $(minikube -p minikube docker-env)` to set up your shell so that `docker` CLI commands will use the server and runtime created by Minikube.
-+ `docker context ls` lets you see and use different container engines through the same `docker` CLI
-  + If the DOCKER_HOST variable is not set your shell you can set the current context with `docker context use CONTEXT`
++ The `docker` CLI uses different container engines according to configuration
+  + `docker context ls` lets you see the avialable contexts and which one is currently in use
+  + `docker context inspect` shows you information about the current context
+  + You can set the current context with `docker context use CONTEXT_NAME` (if the DOCKER_HOST variable is not set)
+  + If the DOCKER_HOST variable is set it will override any context choice you make with `docker context use`
+    + It should contain the endpoint of the container engine that you want the `docker` CLI to use
+      + A docker endpoint is a Unix domain socket name that points to an engine server
   + Use the `-c --context` option with `docker` commands to target different engines, overriding the current context or env variable specified engine
 + `kubectl config get-contexts` shows which clusters exist and which one it is using
   + `kubectl config use-context CLUSTER-NAME`to switch clusters
@@ -101,7 +106,7 @@ These features allow you to create, view, and switch between multiple instances.
 
 #### Try Out Commands
 
-Run a container from a specified image
+Run a web server at localhost:8080 in a container that is created from a specified image and then vew the running containers
 
 ``` shell
 docker run -d -p 8080:80 docker/welcome-to-docker
@@ -110,13 +115,21 @@ docker ps
 
 [docker command Reference](https://docs.docker.com/reference/cli/docker/)
 
-From [Hello Minikube](https://kubernetes.io/docs/tutorials/hello-minikube/)
+Following the [Hello Minikube](https://kubernetes.io/docs/tutorials/hello-minikube/) tutorial, run a web server based on a specific image and access it with a browser
 
 ``` shell
 kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.39 -- /agnhost netexec --http-port=8080
+kubectl expose deployment hello-node --type=LoadBalancer --port=8080
+minikube service hello-node
+```
+
+Then view some info about what is running
+``` shell
+kubectl get nodes
 kubectl get deployments
 kubectl get pods
 kubectl get events
+kubectl get services
 ```
 
 [kubectl command reference](https://kubernetes.io/docs/reference/kubectl/quick-reference/)
@@ -142,6 +155,6 @@ This shows a few different ways to run containers on the same machine
 <Image1 />
 
 
-Incus documentation provide [comparisons of application containers, system containers, and virutal machines](https://linuxcontainers.org/incus/docs/main/explanation/containers_and_vms/). 
+Incus documentation provides [comparisons of application containers, system containers, and virutal machines](https://linuxcontainers.org/incus/docs/main/explanation/containers_and_vms/). 
 
 
