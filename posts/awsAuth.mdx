@@ -3,7 +3,7 @@ title: "AWS Auth Overview"
 originalPublishDate: "2025-01-22"
 type: reference
 topics: AWS
-lastUpdate: "2025-01-22"
+lastUpdate: "2025-03-08"
 ---
 
 This lists a myriad of ways to control access in AWS to primarily custom services. It is also relevant to AWS services and ultimately data that is accessed through services.
@@ -44,12 +44,15 @@ Rejecting or allowing requests. Tying authentication to authorization.
 - [Appsync](https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html)
   - Lambda Authorizer
   - ...
-- [API Gatewya REST API client certificates](https://docs.aws.amazon.com/apigateway/latest/developerguide/rest-api-mutual-tls.html)
+- [API Gateway REST API client certificates](https://docs.aws.amazon.com/apigateway/latest/developerguide/rest-api-mutual-tls.html)
 - run a reverse proxy on compute resources
   - [example: VPC Lattice + Envoy](https://aws.amazon.com/blogs/security/modern-web-application-authentication-and-authorization-with-amazon-vpc-lattice/)
 - in the end service
   - [example: Quarkus + EKS](https://aws.amazon.com/blogs/security/access-token-security-for-microservice-apis-on-amazon-eks/)
   - [example: call AWS Verified Permissions](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/authorization-sdk.html)
+  - look up additional Cognito User Pool user attributes in Cognito API to get info not included in JWT then make authz decisions
+- [CloudFront Signed URLs and Cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html) + [Cache Behavior](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesRestrictViewerAccess)
+- [S3 Presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html)
 
 ### Authorization configuration
 
@@ -62,6 +65,7 @@ Configuring permissions with policies, rules, and mappings
 - [AppSync query, mutation, and field level](https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html#using-additional-authorization-modes)
 - [AppSync data level](https://docs.aws.amazon.com/appsync/latest/devguide/security-authorization-use-cases.html)
 - [Verified Permissions](https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/what-is-avp.html)
+- [Cognito User Pool Lambda triggers](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-lambda-triggers.html) can modify claims
 
 #### Mapping authorization config
 
