@@ -3,7 +3,7 @@ title: "AWS Developer Associate Exam Guide"
 originalPublishDate: "2025-01-13"
 type: reference
 topics: AWS
-lastUpdate: "2025-01-22"
+lastUpdate: "2025-03-08"
 ---
 
 # AWS Certified Developer - Associate
@@ -775,7 +775,7 @@ By using this solution, users can reduce the risk of security breaches and compl
 - CodeDeploy Lambda steps (before and after for each): AllowTraffic
 - [CodeDeploy EC2 steps](https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html#appspec-hooks-ecs): ApplicationStop, DownloadBundle, Install + b&f, ApplicationStart, ValidateService, BlockTraffic + b&f, AllowTraffic + b&f
 - Memcached engine does not support encryption or high availability (replication).
-- Redis supports encryption, read replicas, sharing, geospatial queries, data structures
+- Redis supports encryption, read replicas, sharding, geospatial queries, data structures (like sorted lists)
 - [Redis cluster mode](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Replication.Redis-RedisCluster.html) has multiple shards. Can scale beyond single node storage limits. Spreads load to more nodes
 - [RDS storage capacity auto-scaling](https://aws.amazon.com/about-aws/whats-new/2019/06/rds-storage-auto-scaling/)
 - [RDS Aurora reader replica auto-scaling](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html)
@@ -821,8 +821,6 @@ CodeDeploy
 SAM environments
 
 - samconfig.toml
-
-#### Amounts
 
 EC2
 
