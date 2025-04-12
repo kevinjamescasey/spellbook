@@ -3,7 +3,7 @@ title: "Create New Projects from Existing"
 originalPublishDate: "2024-09-30"
 type: musing
 topics: project creation, project template, project scaffold
-lastUpdate: "2024-10-11"
+lastUpdate: "2025-04-11"
 ---
 
 When creating a new project it helps to duplicate an existing structure as a starting point. Directories arranged in a certain way can provide organization and files can provide scripting, configuration, and starting samples.
@@ -14,7 +14,7 @@ By "project" I just mean a directory with files and subdirectories.
 
 How about just copy the directory of an existing project and modify the parts you don't want to remain the same?
 
-One method with `git` and GitHub's `gh` CLIs:
+This method with `git` and GitHub's `gh` CLI preserves commit history and branches:
 ```
 git clone <old_repo_url>
 cp -r <old_repo> <new_repo>
@@ -22,6 +22,20 @@ cd <new_repo>
 git remote rm origin
 gh repo create -s . --public
 git push --mirror
+```
+
+This method copies one branch and discards history:
+```
+git clone --depth 1 -b <branch> <old_repo_url>
+cp -r <old_repo> <new_repo>
+cd <new_repo>
+rm -rf .git # Remove-Item -Path .git\ -Recurse -Force
+git init
+git branch -m master main
+git add .
+git commit -m 'copied repo'
+gh repo create -s . --public
+git push -u origin main
 ```
 
 This method preserves commit history and branches which you might not want.
