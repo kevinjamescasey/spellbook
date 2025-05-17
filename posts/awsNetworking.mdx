@@ -12,6 +12,7 @@ Ways to get things in AWS connected to each other and the outside world
 
 - Route to Internet Gateway to make public subnet
 - Route to NAT to allow private subnets to access Internet
+- Can be [shared with other accounts](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html)
 
 ## [Peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html)
 
@@ -57,7 +58,6 @@ Provides a network ingress point that distributes traffic to hosts
 | Gateway     | security appliances             |
 | Classic     | TCP, TLS, sticky sessions       |
 
-Any cross region?
 
 ## Connecting to other networks
 
@@ -100,6 +100,9 @@ Use a global network of edge locations to improve response time
 - To route to multiple regions for performance or availability benefits use [Route53](https://aws.amazon.com/blogs/compute/implementing-multi-region-failover-for-amazon-api-gateway/) and optionally [CloudFront](https://docs.aws.amazon.com/architecture-diagrams/latest/multi-region-api-gateway-with-cloudfront/multi-region-api-gateway-with-cloudfront.html) 
 - API Gateway and AppSync can route to other regions but they don't provide a multi region resource like global DynamoDB tables or Aurora
 - [PrivateLink can provide cross region connectivity](https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-cross-region-connectivity-for-aws-privatelink/)
+- Load Balancers don't appear to be able to span regions or send to targets in other regions
+- VPC allows [inter-region peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html)
+- Transit Gateway allows [intra-region peering](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-peering.html)
 
 
 ## Management Tools
