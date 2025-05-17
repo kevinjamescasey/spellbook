@@ -3,7 +3,7 @@ title: "AWS Networking Cheat Sheet"
 originalPublishDate: "2025-01-16"
 type: reference
 topics: AWS
-lastUpdate: "2025-01-16"
+lastUpdate: "2025-05-17"
 ---
 
 Ways to get things in AWS connected to each other and the outside world
@@ -15,7 +15,7 @@ Ways to get things in AWS connected to each other and the outside world
 
 ## [Peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html)
 
-- Eseentially merge VPCs
+- Essentially merge VPCs
 - Connect networks in different regions
 - Free within same Availability Zone
 - Must avoid IP conflicts
@@ -38,9 +38,9 @@ A summary of different ways to use AWS PrivateLink.
 | [GatewayLoadBalancer](https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-gateway-load-balancer.html)                   | virtual security appliances                                                                                                  | gateway LB                 | IP (OSI level 3) |
 | [Resource](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-resources.html#resource-endpoint-overview) | host, or hosts (such as DBs)                                                                                                 | resource gateway (no LB)   | TCP              |
 | [Service network](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-service-networks.html)              | [service network](https://docs.aws.amazon.com/vpc-lattice/latest/ug/service-networks.html) (group of resources and services) | resource gateway (no LB)   | TCP?             |
-| [Gateway](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html)                                        | S3 or DynamoDB                                                                                                               | none                       | HTTPS            |
+| [Gateway](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html) (allegedly  not PrivateLInk)                                        | S3 or DynamoDB                                                                                                               | none                       | HTTPS            |
 
-Charged endpiont existence and amount of data processed
+Charged for endpoint existence and amount of data processed
 
 ## VPC Lattice
 
@@ -64,38 +64,45 @@ Any cross region?
 - VPN sets up IPsec tunnels
 - DirectConeect sets up real networks provided by AWS to bypass your usual ISP
 
-## AWS Global Network
-
-- CloudFront provides endpoints and caching near clients
-- Global Accelerator routes traffic from endpints near clients over AWS's global network for slightly better latency
-
-## Management Tools
-
-- Network Manager
-- IP Address Manager (IPAM)
-
 ## HTTP focus
 
 - API Gateway - Mostly RESTish, websockets, access control, manage deployment, manage usage
 - AppSync - GraphQL resolved by Lambda, DynamoDB, Aurora, OpenSearch, or HTTP endpoints (such as API Gateway)
 - Lambda URLs
 
-Any cross region?
 
 ## DNS
 
-- Route53 is alobal (not regional) service
+- Route53 is a global (not regional) service
 - DNS servers are provided in VPCs
 - Charged for custom domain names, custom DNS management (hosted zones), DNS queries, and host health checks
-- Fancy routing: failover, geolocaiton, geo proximity, lowest latenecy, multiple answers, weighted
-- Firewall domain name filtering
+- [Fancy routing](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html): failover, geo-location, geo proximity, lowest latency, multi-value answers, weighted
+- Firewall filters outbound DNS queries based on allow and deny lists
 
 ## Extra security
 
 - [Traffic Mirroring](https://docs.aws.amazon.com/vpc/latest/mirroring/what-is-traffic-mirroring.html) allows inspection
-- [GatewayLoadBalancer](https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-gateway-load-balancer.html) allows inspecton
+- [GatewayLoadBalancer](https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-gateway-load-balancer.html) allows inspection
 - [WAF](https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html) Filters based on rules
 - [Shield](https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html) Protects from DDOS
-- [Firewall Manaager](https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html)
+- [Firewall Manager](https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html)
 - [Network Firewall](https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html)
 - [Guard Duty](https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html) Monitors logs (beyond just networking) for suspicious behavior
+
+## Better performance
+Use a global network of edge locations to improve response time
+- [Global Accelerator](https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html)
+    - routes traffic from endpoints near clients over AWS's global network for faster traversal
+- [CloudFront](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+    - cache near clients to decrease traversal distance
+
+## Multiple regions
+- To route to multiple regions for performance or availability benefits use [Route53](https://aws.amazon.com/blogs/compute/implementing-multi-region-failover-for-amazon-api-gateway/) and optionally [CloudFront](https://docs.aws.amazon.com/architecture-diagrams/latest/multi-region-api-gateway-with-cloudfront/multi-region-api-gateway-with-cloudfront.html) 
+- API Gateway and AppSync can route to other regions but they don't provide a multi region resource like global DynamoDB tables or Aurora
+- [PrivateLink can provide cross region connectivity](https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-cross-region-connectivity-for-aws-privatelink/)
+
+
+## Management Tools
+
+- Network Manager
+- IP Address Manager (IPAM)
