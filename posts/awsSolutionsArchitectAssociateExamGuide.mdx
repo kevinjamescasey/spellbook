@@ -1692,3 +1692,39 @@ One of its key benefits is that it eliminates the need for provisioning and mana
   integration allows for more efficient data management, improved scalability, and
   enhanced security.
 </details>
+
+### Random stuff found through other training sources
+
+- RDS snapshot is cheaper than a stopped database
+- Aurora automated backups can't be disabled and have point in time recovery
+- MySQL RDS can be restored from back in S3 created from non-RDS database
+- Aurora allows cloning through copy-on-write without affecting original
+- RDS can enforce IAM authentication and is a VPC
+- ElasticCache Redis allows SSL and either IAM authn or Redis AUTH
+- ElasticCach Memcached allows SASL
+- PostgreSQL:5432 MySQL:3306 MariaDB:3306 Oracle:1521 MSSQL:1433
+
+#### Amounts
+
+- 4KB maximum browser cookie size
+
+CloudFront
+
+- [400 points of presence](https://aws.amazon.com/blogs/networking-and-content-delivery/400-amazon-cloudfront-points-of-presence/)
+
+EC2
+
+- 150GB max RAM size for hibernate
+- 60 days max hibernation time
+
+RDS
+
+- 0-35 days retention of automatic backups
+- 66% reduced failover time from RDS proxy
+
+Aurora Global Database
+
+- 5 max read-only region
+- 16 max read replicas per secondary region
+- 1 minute Recovery Time Object to promote region from secondary to primary
+- 1 second typical cross-region replication
