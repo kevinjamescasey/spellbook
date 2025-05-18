@@ -1,0 +1,94 @@
+
+
+# Outline
+getting data from web page
+
+with or without html
+which data do you want
+how do you plan to use the data
+structuredness spectrum
+
+methods
+ services that do it for you
+ libraries that do it for you
+ fine grained control by doing it yourself
+   fetching responses
+   extracting useful data
+   
+
+ 
+
+
+There are paid services that will scrape structured data out of websites for you, such as [webscrapingapi.com](https://www.webscrapingapi.com/)
+
+Countless web client libraries can fetch HTTP responses with HTML bodies.
+Examples:
+https://requests.readthedocs.io/en/latest/
+
+Specialized libraries help navigate and read the HTML, such as [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/).
+
+How much should you trust and use the structure provided by the HTML? Should you just scrape out the text and then add the structure back in based on your anlysis?
+
+Natural Lanuage Processing (NLP)
+
+Named Entity Recognition (NER)
+
+Pretrained Transformer models
+[BERT](https://huggingface.co/docs/transformers/v4.45.2/en/model_doc/bert)
+[RoBERTa](https://huggingface.co/docs/transformers/en/model_doc/roberta) (optimzed version of BERT)
+
+How much resource usage do these models require?
+
+ntlk
+
+POS tagging
+
+
+
+## Finding relevant sections of a recipe web page
+
+Ingredients list
+Instructions
+
+I don't know which type of model(s) to use:
+https://huggingface.co/docs/transformers/v4.14.1/en/task_summary
+
+None of the NLP tools really mention dealing with any added structure let alone markup intended for display.
+
+### Structured data embedded in page
+
+https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data#supported-formats
+
+### Use the HTML structure as a guide
+
+Look for `<ul>` tags near "Ingredients" in header tags. Surely those will contain `<li>` tags with ingredients.
+
+Instructions may not be in  `<ol>`. They may just be in a series of `<div>`s or just text in a `<p>`.
+
+### Traverse the tree structure using models to search for relevant sections
+
+Can you prune out chunks that are too large or fragments that are too small?
+
+Can segments be passed to a summarization model and then have the results checked for things like "list of ingredients"?
+
+### Scraping out all text and then using NLP to find the structure
+
+If we don't have heading elements we can recognize headings from very short lines?
+If we don't have lists we can recognize lists from a sequence of short lines?
+
+It doesn't seem like a good idea to just throw away the HTML structure, but NLP techniques don't seem to support HTML.
+
+
+## Maybe relevant
+
+https://medium.com/@eskandar.sahel/exploring-feature-extraction-techniques-for-natural-language-processing-46052ee6514
+https://deepgram.com/learn/turning-recipes-into-data-with-named-entity-recognition
+
+https://www.benawad.com/scraping-recipe-websites/
+
+
+https://jina.ai/reader/ converts web data to markdown
+
+https://oxylabs.io/blog/playwright-web-scraping
+
+language models can write scrapers for you

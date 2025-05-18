@@ -1,0 +1,47 @@
+## VPC Basics
+
+## Peering
+
+- Eseentially merge VPCs
+- Connect networks in different regions
+- Free within same Availability Zone
+- Must avoid IP conflicts
+
+## Transit Gateway
+
+- Interconnect VPCs and other networks
+- Charged for attachments and amount of data traversing
+- Control routing between attached networks
+
+## PrivateLink Endpoint Types
+
+A summary of different ways to use AWS PrivateLink.
+
+| Endpoint Type                                                                                                               | Things Accessed                                                                                                              | Self-managed Ingress Point | Traffic Type     |
+| --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ---------------- |
+| Interface                                                                                                                   | [AWS Service](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-aws-services.html)                       | none                       | TCP or UDP       |
+| Interface                                                                                                                   | [custom endpoint service](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-share-your-services.html)           | network LB or gateway LB   | TCP or UDP       |
+| [GatewayLoadBalancer](https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-gateway-load-balancer.html)                   | virtual security appliances                                                                                                  | gateway LB                 | IP (OSI level 3) |
+| [Resource](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-resources.html#resource-endpoint-overview) | host, or hosts (such as DBs)                                                                                                 | resource gateway (no LB)   | TCP              |
+| [Service network](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-service-networks.html)              | [service network](https://docs.aws.amazon.com/vpc-lattice/latest/ug/service-networks.html) (group of resources and services) | resource gateway (no LB)   | TCP?             |
+| [Gateway](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html)                                        | S3 or DynamoDB                                                                                                               | none                       | HTTPS            |
+
+## VPC Lattice
+
+Controls connectivity and routing, but not load balancing
+
+## Load Balancing
+
+## Connecting to other networks
+
+- VPN sets up IPsec tunnels
+- DirectConeect sets up real networks provided by AWS to bypass your usual ISP
+
+## AWS Global Network
+
+CloudFront and Global Accelerator
+
+## Management Tools
+
+- Network Manager
+- IP Address Manager (IPAM)

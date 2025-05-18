@@ -1,0 +1,23 @@
+How can data be passed between lines of code?
+
+```
+intrathread - no concurrency issues
+interthread - concurrency issues
+    intraprocess - independent of OS
+    interprocess - requires OS support
+        intracontainer
+        intercontainer - requires networking software
+            intramachine
+            intermachine - requires networking hardware
+                intranetwork
+                internetwork
+```
+
+other levels to consider: vm, rack, network, building, city, country...
+
+how does code end up in same process?
+
+- same binary file
+- linked binary files
+- same type of bytecode loaded onto same vm from files
+- fetched over network

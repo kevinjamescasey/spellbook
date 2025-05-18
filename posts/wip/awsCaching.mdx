@@ -1,0 +1,27 @@
+CloudFront
+
+- Cache at 200+ edge locations near users
+- Complicated policies
+
+API Gateway
+
+- Cache responses
+
+ElasticCache
+
+- Your custom code decides how to use the cache (lazy load and/or write through)
+- Does it integrate with anything?
+
+Lambda Authorizor
+
+- Caches authorization results for token or request
+
+Custom caching
+
+- Custom code manages storing and retrieving anywhere
+  - Examples
+    - Lambda extension caches data and shares it between invocations
+      - Extensions provided by AWS does this for fetched secrets
+    - Lambda stores global variable
+    - Store in EC2 instance's EBS volume or instance store or EFS
+    - Store long calculation results in a database

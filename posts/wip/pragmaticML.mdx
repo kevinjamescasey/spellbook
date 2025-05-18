@@ -1,0 +1,83 @@
+
+how is data stored?
+ file formats
+  csv
+  avro
+  parquet
+ databases
+  dumped to files
+  data warehouses
+ repositories
+  kaggle
+  hugging face
+ popular example data sets
+  [MNIST](https://www.kaggle.com/datasets/hojjatk/mnist-dataset)
+  [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)
+
+ scraped from web 
+
+how is data moved?
+  data pipelines
+    ETL
+    ElT
+    replication
+    streaming
+    batch
+    orchestration tools
+        apache airflow
+        AWS glue?
+
+how is data transformed?
+    ETL
+      queries
+      stored procedures
+      staging middleware tools
+        orchestration
+    ElT
+      dbt
+    
+how are models trained?
+  is continuous learning a thing?
+    It is suggested in books but I don't think it happens much.
+    They are replaced by new versions
+    If you let the model change while in production you don't know how well it performs
+      unless you're somehow continuously testing
+  algorithms reading in data and outputting data
+    many implementations of many algorithms
+      libraries
+        scikit learn
+        spark mllib
+        deep learning
+          pytorch, tensorflow, ...
+      many more in many programming languages
+  cross validation
+    k folds
+  
+
+how are models stored/persisted/serialized/checkpionted?
+  file formats
+    NNs - GGUF, safetensors
+    scikit-learn - https://scikit-learn.org/stable/model_persistence.html
+  storage locations
+    compressed archive files stored anywhere
+      S3, GitHub, any web server, etc.
+  repositories
+    kaggle
+    hugging face
+    [TensorFlow Hub](https://www.tensorflow.org/hub)
+    cloud providers
+
+how are models managed?
+  declaring dependencies?
+  fetching from a central source?
+  are supply chain attacks via models ineffectual because they are just data and not code?
+  continuous testing?
+
+how is inference provided?
+ algorithm that reeads in input subject datum and model data then outputs mapped answer
+   some inference have loops that feed the mapped outputs back in as the next subject datum
+     for example, LLMs predict the next token one at a time in a loop 
+ web interface
+ local use
+ cloud hosting tools
+
