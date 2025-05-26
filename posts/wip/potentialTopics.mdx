@@ -1,0 +1,104 @@
+
+
+# TODO
+
+## containers
+
+better list of tutrial commands from fresh install
+  run an image as a container
+
+add podman to container essentials?
+
+try kind multi-node clusters (and minikube)
+
+
+Can`kubeadm` be used locally
+
+multi-architecture images?
+
+## virtualization
+more info about vms, hypervisors,
+
+
+## CPU architectures
+
+The chip manufacturers can name their architectures whatever they want.
+https://en.wikipedia.org/wiki/Comparison_of_instruction_set_architectures
+
+The OS kernel makers can also use whatever names they want to refer to the architectures.
+https://www.kernel.org/doc/html/v6.3/arch.html 
+
+Compiler makers can also use whatever names they want to refer to the OSs and architectures.
+`go tool dist list` shows combinations supprted by GoLang
+https://www.graalvm.org/22.3/docs/introduction/#features-support
+
+## how to
+
+Try using popular Python libraries with Clojure interop on GraalVM
+
+## Gatsby
+
+StaticImage can be included in pages but not in collection route node pages
+  had to use GraphQl filter to specify one image and then GatsbyImage to display it
+
+## AI
+
+Codeium - https://docs.codeium.com/overview/getting-started
+Opus
+
+https://prompt.16x.engineer/
+
+https://codebuddy.ca/
+
+OpenAI ChatGPT, o1 DALL-E
+https://openai.com/api/pricing/
+
+Meta Llama
+https://github.com/meta-llama/llama-stack/blob/main/docs/getting_started.md
+
+Anthropic Claude
+https://www.anthropic.com/claude
+https://www.anthropic.com/pricing
+
+HuggingFace
+https://huggingface.co/
+
+ inference and serving
+    https://docs.vllm.ai/en/latest/
+    https://huggingface.co/docs/hub/transformers
+    https://huggingface.co/docs/hub/models-libraries
+
+Agentic agents ...
+
+"Massive headwinds against local models" - Cursor Team on Lex Fridman
+
+"You can distill a capability from a big model into a smaller model"
+
+
+## endpoints
+
+many definitions within a security context say endpoints are computers at the end of networks 
+  https://www.cloudflare.com/learning/security/glossary/what-is-endpoint/ (says load balancers are not endpoints)
+  https://www.microsoft.com/en-us/security/business/security-101/what-is-an-endpoint
+  https://www.paloaltonetworks.com/cyberpedia/what-is-an-endpoint
+  https://www.crowdstrike.com/en-us/cybersecurity-101/endpoint-security/endpoint/
+  https://www.trellix.com/security-awareness/endpoint/what-is-endpoint-security/
+
+definitions of HTTP endpoints suggest that the endpoint would be at the location of the load balancer or API gateway regardless of how many machines serve up responses
+  https://beeceptor.com/docs/concepts/http-endpoints/
+  https://help.xmatters.com/ondemand/integrationbuilder/configure-endpoints.htm
+
+
+### scope of side effects
+
+calling a function affects real physical memory in the computer
+making a netwwork call affects the state of the wires and remote machines
+
+this side effect definition limits the scope of the word "effect" https://en.wikipedia.org/wiki/Side_effect_(computer_science) 
+
+calling a pure function just uses some memory and CPU and doesn't affect any state that survives beyond the life of the function exectution
+  the amount used could vary depending on memoization
+  it uses energy and generates heat (significant in aggregate)
+  if there is plenty of memory available and memory is allocated and deallocated well, then it shouldn't affect other processes 
+
+The impact of the effects and the risk of the effects causing a problem is lower with pure functions.

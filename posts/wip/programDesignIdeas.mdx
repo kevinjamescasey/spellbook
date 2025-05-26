@@ -1,0 +1,85 @@
+kiss,dry,yagni
+
+desire low coupling (decreased by adding inidirection (which adds cognitive challenge when reading))
+desire high cohesion (increased by putting things together that make sense and work well together)(very subjective)(seems to form a complete and coherent interface)(exlude things that don't belong)
+
+SOLID (OO principles)
+ single responsibility
+  http://blog.8thlight.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html
+ open closed - opened for extension and closed for modification
+  http://blog.8thlight.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html
+ liskov substitution
+ interface segregation
+ dependency inversion (classes in low level package depend on interfaces in high level package) (not really inverting from high level depending on low level to low level depending on high level, because and interface is inserted between them that they both depend on)
+  GoF framework vs. library
+  code to an interface not an implementation
+  Fowler dependency injection
+law of Demeter (principle of least knowledge)
+Hollywood (observer pattern)
+
+modularity - reusable pluggable components
+
+Legos vs knitted castle
+
+info hiding - hide implementation and representation decisions that could change(Parnas); "info" as in the word used by physicists
+  changes to the hidden info can't affect the outside
+
+code to interface not implementation
+protected variations (grasp)
+protect against change
+
+encapsulation - technique to facilitate but not guarantee info hiding; parts of the public interface can access the private data; the public and private parts are combined into one thing/entity; 
+  OO class: public methods, private data
+  JS module: exported parts, parts not exported
+  web service: API, service implementation (often a private DB)
+  AWS VPC: public hosts, private hosts
+  concrete data type: abstract data type interface, concrete implementation
+
+prefer composition(dynamic, low coupling) over inheritence(static, high coupling)
+mixins - inheriting reusable code without becoming a specialization of
+
+GRASP
+GoF
+
+http://blog.cleancoder.com/uncle-bob/2014/11/24/FPvsOO.html
+https://blog.cleancoder.com/uncle-bob/2012/12/19/Three-Paradigms.html
+
+https://en.wikipedia.org/wiki/Robustness_principle
+
+plugin/extension
+
+
+
+
+### 
+
+1Megabtye is 1 million bits. Loading a 1MB program is like setting a million control switches on a machine.
+
+
+
+When the requestor initiates engagement with the provider temporary control of the machine is transfered from the requestor to the provider.
+
+We like to think of an interface as a magic barier between requestor and provider that decouples them. It prevents the requestor from finding out how the provider is providing.
+Why do we need to declare an explicit interface in languages that provide that mechanism?
+It allows us to tell the type checker that we are trying to write generic code that will work for multiple different types instead of making us declare one specific concrete type.
+
+(maybe) It makes it a more clear to the person creating the provider what the provider should do. They can see the operation names and parameter names. They can see the types of the parameters and return values.
+(maybe) It also makes it more clear to the person creating the requestor what the provider can provide.
+
+In every language I've seen, the interface allows the type checker to determine if some of the data being passed to the provider is compatible with the operations provided. There is some place were you have to delcare that the data has a type and a place where you declare that the provider will work with that type.
+
+Is the provider a single function/method/routine or a set of of them? In Java the provider is a class that has explicitly declared to implement an interface. In Go a provider could be a single method that declares which type it is implemented for.
+
+ Why would you need more than one operation in an interface? The data being sent to the provider can usually only be directly tagged with one type at a time, so if you need to use more than one operation on that data you would have to group those operations into one interface type or you would have to keep retagging the data with a different type for each operation before you invoke it. Some language allow you to make a group of groups of operations. For example, in Go a struct type can be associated with multiple interface types. So when you declare a piece of data has a struct type you are in effect declaring that is has all of the interface types associated with that struct type. 
+
+The type system only provide value when you pass to a function, return from a function, or assign to a variable an incorrect data type.
+
+## 
+We often reuse generic sequential types but make custom types for associative data. We write generic code to manipulate sequences, but write bespoke code that refers to names in associations. The algorithms depend on those names. Validation is an example.  We also create custom persistence schemas for those names. The association between name-value pairs is important because it gives meaning to the aggregate object that contains those pairs. It maybe even turns the aggregate into a composite generating an identity. The names matter becasue they respresent a reusable abstraction.
+
+The more intrcate and bespoke our data is the more meaningful it is. The relationships matter because they convey contextual meaning.
+
+Is it worth it to put so much care into designing that you'll be able to save effort in the future when your software needs to change?
+
+generic, difficult to make, difficult to understand, reusable  ====> specific, easy to make, easy to understand, not reusable
+complexity + utility vs simplicity

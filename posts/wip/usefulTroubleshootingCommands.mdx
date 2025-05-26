@@ -1,0 +1,107 @@
+
+
+These are tested on macOS, but might work similarly on other OSes.
+
+
+## Find use of local ports
+
+Show PID and command using a port `<PortNumber>`
+``` shell
+sudo lsof -i :<PortNumber>
+```
+
+Show network connections (active sockets) for a protocol
+``` shell
+netstat -lnp tcp
+```
+`-n` shows numeric addresses instead of names
+`-l` shows full IPv6 addresses
+
+
+
+## show in use resources
+Show pids using a file
+fuser file
+
+
+## Install DNS tools on Amazon Linux 2
+
+``` shell
+sudo yum install bind-utils
+```
+
+## Install and run Apache web server on Amazon Linux 2 EC2 instance
+
+Paste this in the user data of the instance
+``` shell
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+```
+
+## Start the Apache web server that comes on Mac
+
+``` shell
+sudo apachectl start
+```
+
+The root is in `/Library/WebServer/Documents/index.html.en` and by default can only be edited by root.
+The config is in `/private/etc/apache2/httpd.conf`
+
+## Find the public IP address that your internet traffic is coming from
+curl ipinfo.io
+curl icanhazip.com
+
+## Attempt to resolve a DNS name to an IP address
+nslookup name.tld
+dig name.tld
+host name.tld
+
+## View response from HTTP GET request
+curl name.tld
+wget -qO- name.tld
+
+
+## from https://gist.githubusercontent.com/kevinjamescasey/8e1458ee0cb0ff78a96056713c4c339f/raw/c022baae9d77a629d2969837dd7432701d2fc004/networking
+* find ip
+** find local IP
+hostname -I
+ip route get 1.2.3.4 | awk '{print $7}'
+ifconfig
+netstat
+
+* remote
+** check if server is accepting TCP connection on port
+nc -zv host port
+** crude single-sample latency measure
+time nc -zw30 host port
+** use ping sweep to discover hosts
+nmap -sn 192.168.1.0/24
+** port scan specific hosts agressively
+nmap -A -T4 192.168.1.1,7,134,162,215
+
+
+* tools
+** local
+ifconfig
+netstat
+tcpdump
+ip
+*** which pids are using network
+netstat -tulpn 
+lsof -i
+fuser port/protocol
+*** network components (daemons/services)
+unbound (dns)
+iptables (firewall)
+** remote
+nmap
+***icmp based
+ping
+traceroute
+mtr
+*** ssh
+avahi-daemon #ssh by hostname instead of ip
+scp, sftp, rsync

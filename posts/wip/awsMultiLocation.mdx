@@ -1,0 +1,48 @@
+### Global (regionless/auto-multi-region)
+
+Services that are location agnostic? AWS handles availability for you so you don't much care about the location?
+
+[CloudFront 400+ points of presence](https://aws.amazon.com/blogs/networking-and-content-delivery/400-amazon-cloudfront-points-of-presence/)
+IAM
+Route53
+
+possibilities listed on google that I need to investigate further:
+AWS Organizations, AWS Global Accelerator, AWS Direct Connect, AWS Firewall Manager, AWS Web Application Firewall (WAF), and AWS Shield
+
+### Multi-AZ
+
+These are things that live in VPCs.
+
+Some things cost more to have redundancies cross AZ.
+LBs
+ElastiCache
+DAX
+ECS
+EFS
+RDS standby failover
+
+Many things have cross AZ access within your VPC just to access the other things in your VPC:
+DynamoDB
+
+#### zoneless/auto-multi-AZ
+
+AWS just tells you the availability percentage per time so you don't have to worry about specific AZs.
+
+### Multi-Region
+
+Services that feature cross-region capabilities but you have to set it up and it costs more.
+
+[S3 Replication](https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html)
+[SecretsManager replication](https://docs.aws.amazon.com/secretsmanager/latest/userguide/replicate-secrets.html)
+[RDS Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.XRgn.html)
+[RDS Aurora Global Database](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html)
+[DynamoDB Global Tables](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html)
+[Backup](https://docs.aws.amazon.com/aws-backup/latest/devguide/cross-region-backup.html)
+
+Using R53 and CloudFront to make multi regional solutions?
+https://docs.aws.amazon.com/architecture-diagrams/latest/multi-region-api-gateway-with-cloudfront/multi-region-api-gateway-with-cloudfront.html
+https://docs.aws.amazon.com/whitepapers/latest/real-time-communication-on-aws/cross-region-dns-based-load-balancing-and-failover.html
+
+### Multi-Partition
+
+do it yourself by transferring data through standard protocols?
