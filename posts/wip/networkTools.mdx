@@ -1,0 +1,53 @@
+
+
+
+
+
+
+* clients
+  curl
+  wget
+  postman - https://www.postman.com/
+  insomnia - https://insomnia.rest/
+  httpie - https://httpie.io/ (cli)
+  Rester - https://github.com/frigus02/RESTer
+  paw - https://paw.cloud/ (mac only, not free)
+  requester - https://github.com/kylebebak/Requester (for Sublime text editor)
+* proxy, capture, intercept
+  wireshark - https://www.wireshark.org/
+
+  whistle - https://github.com/avwo/whistle
+  burp - https://portswigger.net/burp/communitydownload
+  charles (not free)
+  proxyman (mac only, not free)
+** mtmproxy
+   https://mitmproxy.org/
+   different proxy configurations https://docs.mitmproxy.org/stable/concepts-modes/
+   must configure system or client proxy settings yourself
+   must import CA cert yourself
+   worst UI
+   can pause matched traffic for editing
+   cannot add header to request
+   difficult to intercept traffic to localhost servers: had to add "127.0.0.1 mysite.local" to Windows/System32/Drivers/Etc
+** fiddler
+   https://www.telerik.com/fiddler
+   (requires log in, allows Google)
+   by default records all http messages on system by changing system proxy settings
+   can allow passthrough of traffic that doesn't match any rule
+   best UI
+** http toolkit
+   https://httptoolkit.tech/
+   intercept and record http messages for specific clients
+   does not affect all traffic on system
+   simple matching for mocking
+   pause and edit live messages
+   cannot replay
+   decent UI
+* other cli tools
+  proxychains
+  nmap
+  netcat (nc)
+  dig
+  nslookup
+  ssh
+  

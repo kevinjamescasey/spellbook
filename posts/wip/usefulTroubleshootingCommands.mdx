@@ -1,7 +1,23 @@
 
 
-These are tested on macOS, but might work similarly on other OSes.
+These are mostly tested on macOS, but might work similarly on other OSes.
 
+# remote machines
+
+## check if server is accepting TCP connection on port
+nc -vzw 3 host port # Ubuntu
+nc -vzG 3 host port # Mac
+
+## crude single-sample latency measure
+time nc -zw30 host port
+
+## use ping sweep to discover hosts
+nmap -sn 192.168.1.0/24
+
+## port scan specific hosts agressively
+nmap -A -T4 192.168.1.1,7,134,162,215
+
+# local machine
 
 ## Find use of local ports
 
@@ -17,7 +33,9 @@ netstat -lnp tcp
 `-n` shows numeric addresses instead of names
 `-l` shows full IPv6 addresses
 
-
+*** which pids are using network
+netstat -tulpn 
+lsof -i
 
 ## show in use resources
 Show pids using a file
@@ -63,25 +81,20 @@ host name.tld
 curl name.tld
 wget -qO- name.tld
 
-
-## from https://gist.githubusercontent.com/kevinjamescasey/8e1458ee0cb0ff78a96056713c4c339f/raw/c022baae9d77a629d2969837dd7432701d2fc004/networking
-* find ip
-** find local IP
+## find local IP
 hostname -I
 ip route get 1.2.3.4 | awk '{print $7}'
 ifconfig
 netstat
 
-* remote
-** check if server is accepting TCP connection on port
-nc -zv host port
-** crude single-sample latency measure
-time nc -zw30 host port
-** use ping sweep to discover hosts
-nmap -sn 192.168.1.0/24
-** port scan specific hosts agressively
-nmap -A -T4 192.168.1.1,7,134,162,215
+# network exploration
+find lan ip
+find lan cidr
+find other lan host ips
+    find lan's router lan ip
+find lan's router wan ip
 
+# from https://gist.githubusercontent.com/kevinjamescasey/8e1458ee0cb0ff78a96056713c4c339f/raw/c022baae9d77a629d2969837dd7432701d2fc004/networking
 
 * tools
 ** local
@@ -89,9 +102,7 @@ ifconfig
 netstat
 tcpdump
 ip
-*** which pids are using network
-netstat -tulpn 
-lsof -i
+
 fuser port/protocol
 *** network components (daemons/services)
 unbound (dns)
