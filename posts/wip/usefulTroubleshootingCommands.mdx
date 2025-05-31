@@ -33,7 +33,7 @@ netstat -lnp tcp
 `-n` shows numeric addresses instead of names
 `-l` shows full IPv6 addresses
 
-*** which pids are using network
+## Findwhich pids are using network ?
 netstat -tulpn 
 lsof -i
 
@@ -83,7 +83,11 @@ wget -qO- name.tld
 
 ## find local IP
 hostname -I
+
+```
 ip route get 1.2.3.4 | awk '{print $7}'
+```
+
 ifconfig
 netstat
 
@@ -96,23 +100,26 @@ find lan's router wan ip
 
 # from https://gist.githubusercontent.com/kevinjamescasey/8e1458ee0cb0ff78a96056713c4c339f/raw/c022baae9d77a629d2969837dd7432701d2fc004/networking
 
-* tools
-** local
+## local
 ifconfig
 netstat
 tcpdump
 ip
 
 fuser port/protocol
-*** network components (daemons/services)
+
+## network components (daemons/services)
 unbound (dns)
 iptables (firewall)
-** remote
-nmap
-***icmp based
+
+## remote
+
+## icmp based (useless on many networks)
 ping
 traceroute
 mtr
-*** ssh
+
+
+## ssh
 avahi-daemon #ssh by hostname instead of ip
 scp, sftp, rsync
