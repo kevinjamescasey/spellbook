@@ -3,16 +3,15 @@ title: "AWS Auth Overview"
 originalPublishDate: "2025-01-22"
 type: reference
 topics: AWS
-lastUpdate: "2025-03-08"
+lastUpdate: "2025-06-14"
 ---
 
 This lists a myriad of ways to control access in AWS to primarily custom services. It is also relevant to AWS services and ultimately data that is accessed through services.
 
 ## Identity
 
-These tend to be for human users
+These are for human users
 
-- IAM users
 - Cognito User Pools
 - Cognito Federated Identities
 - [IAM identity provider federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html)
@@ -20,11 +19,25 @@ These tend to be for human users
 
 These are for machines
 
-- Lamda execution roles
-- Container execution roles
-- EC2 instance roles
-- store credentials
+- Service roles
+  - Lambda execution roles
+  - ECS task roles
+  - EC2 instance profile roles
+  - etc.
+- stored long-term credentials (when AWS IAM authentication can't be used)
 - [IAM roles anywhere](https://docs.aws.amazon.com/rolesanywhere/latest/userguide/introduction.html)
+
+These are for both
+- root user
+  - avoid using as identity
+  - do use in policies to represent a whole account (with conditions)
+- IAM users (when roles can't be used)
+
+Mapping AWS IAM credentials to something else
+
+- Exchange AWS credentials for other AWS Credentials: assume role
+- Exchange AWS credentials for tokens: [service bearer tokens](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_bearer.html) (esoteric)
+- Exchange AWS credentials for RDS password: [RDS IAM Authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html) 
 
 ## Access Control
 
@@ -74,11 +87,29 @@ Mapping some authorization config to AWS IAM permissions
 - [Cognito Identity Pool ABAC](https://docs.aws.amazon.com/cognito/latest/developerguide/attributes-for-access-control.html)
 - [Cognito Identity Pool RBAC](https://docs.aws.amazon.com/cognito/latest/developerguide/role-based-access-control.html)
 
-Mapping AWS IAM credentials to something else
+#### AWS IAM decisions affected by
+- [condition keys](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html) refer to attributes of the [request context](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html)
+- names of resources
+- attributes of the request
+- current time
+- [variables and tags](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html#policy-vars-no-value)
 
-- Exchange AWS credentials for other AWS Credentials: assume role
-- Echange AWS credentials for tokens: [service bearer tokens](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_bearer.html) (esoteric)
+#### Assuming Roles
+- iam:PassRole gives a service permission to assume a service role
 
-Giving something else permissions?
+##### Role Chaining
+- Assuming a role in the same account requires only a trust policy
+- Assuming a role in a different account also requires a policy on the assuming role
+- Assuming role must exist before trust policy refers to it as a trusted principal
+  - If deleted trust policy will show role ID of the non-existent assuming role
+  - Conditions based on `aws:PrincipalArn` do not have these timing issues
 
-- PassRole
+
+#### [Role docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
+- [How to use trust policies with IAM roles](https://aws.amazon.com/blogs/security/how-to-use-trust-policies-with-iam-roles/) has many good examples
+- [AWS JSON policy elements: Principal](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying) shows how to define different types of principals in policies
+- [Methods to assume a role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage-assume.html)
+
+
+
+
