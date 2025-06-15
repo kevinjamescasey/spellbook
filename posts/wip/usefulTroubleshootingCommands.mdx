@@ -5,8 +5,16 @@ These are mostly tested on macOS, but might work similarly on other OSes.
 # remote machines
 
 ## check if server is accepting TCP connection on port
-nc -vzw 3 host port # Ubuntu
+### Debian, Ubuntu
+sudo apt-get install netcat
+nc -vzw 3 host port
+### macOS
 nc -vzG 3 host port # Mac
+### Amazon Linux
+sudo yum install nc
+nc -vzw 3 host port
+### CentOS
+sudo yum install nmap-ncat
 
 ## crude single-sample latency measure
 time nc -zw30 host port
