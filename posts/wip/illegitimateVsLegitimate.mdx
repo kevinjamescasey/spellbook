@@ -1,0 +1,30 @@
+
+
+There are many scams where a process is fooled into believing that something illegitimate is legitimate. Processes that rely on people are especially susceptible to these scams. We see many attempts to combat against the scams by making processes better at differentiating between the illegitimate and legitimate things. 
+
+# SIM Swap
+
+Legitimate reasons for the owner of a phone company account to swap their [SIM card](https://en.wikipedia.org/wiki/SIM_card).
+- Old SIM card destroyed
+- Old SIM card lost
+- Old SIM card incompatible with new device
+
+We train support staff to follow procedures to verify the identity of the person making the request. We put all of the burden on the reciever of the request to make the correct determination.
+
+What if we added a mechanism for the account owner to authorize and revoke authorization for SIM swapping? Then some of the burden could be transferred the the account owner. We could automatically revoke authorization and only allow it for small periods of time. A mechanism like this exists for credit checks and credit bureaus to protect against identity theft. I quick search revealed that a couple of the largest mobile phone account providers in the US already have mechanisms like this.
+
+# Email Links
+
+Legitimate reasons to include links in emails are countless and I presume the prevalence of emails with links has increased as people have embraced complex network-connected computer technology.
+
+We train email recievers to determine the legitimacy of emails by looking at the sender email address and domain of links. We ask them to consider the context, timing, grammar, and their expectations. We don't really seem to do much to stop legitiate email senders from crafting legitimate emails that are indistinguishable from illegitimate ones. We put all of the burden on the reciever to make the correct determination.
+
+Spam filters reject enormous amounts of seemingly illegitimate emails. Sometimes they reject legitimate emails. I think organizations could do more to reject legitimate emails that look illegitimate and automatically provide feedback to senders letting them know how to make their emails look more legitimate.
+
+Email senders could post information about their emails in some other trusted communication channel that recievers could use to verify the legitimatacy of the emails. The verification could even be automated. Email recievers could have software that automatically reaches out to the verification channel to validate every email link that is clicked on. If the sender does not post/register their emailed links with the verification mechanism, then the reciever will never visit the link's URL. For example, a link registrar could provide an unforgeable signature that needs to be included with (or in) the link and then software running on the receiver's machine would verify the signature before allowing the link to be activated.
+
+# Varitions of the Confused Deputy 
+
+For SIM swaps the deputy is the support staff deciding wether to make the swaps and the victim is the legitimate account owner.
+
+For email phishing the deputy is the reciever of the email deciding wether to click the link. The deputy may be the victim or the organization whose resources they have priveleged access to may be the victim.
