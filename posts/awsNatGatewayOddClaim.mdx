@@ -1,0 +1,29 @@
+---
+title: "AWS NAT Gateway Odd Claim"
+originalPublishDate: "2025-07-27"
+type: musing
+topics: AWS
+lastUpdate: "2025-07-27"
+---
+
+
+[AWS NAT Gateway docs](https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-working-with.html#nat-gateway-edit-secondary) make a strange claim.
+
+>Each IPv4 address can support up to 55,000 simultaneous connections to each unique destination. A unique destination is identified by a unique combination of destination IP address, the destination port, and protocol (TCP/UDP/ICMP). 
+
+What?!
+
+There are 4.3 billion IPv4 addresses. Since many are reserved for private or multicast, there may only be 3-4 billion available for public connections. IPv6 provides 2^128.
+There are 65k ports.
+
+So AWS is claiming that a NAT gateway can support 55,000 x 65,000 x number of IP addresses ?
+
+Of course not every IP will be hosting servers on every port and there would never be a reason to try to connect to all of them.
+
+But AWS can't possibly know how many unique destinations you want to connect to simultaneous, so how can they claim to know how many simultaneous connections they can support. I don't think this is meant to be a claim of resources available to support this many connections. It is the declaration of some internal limit they have for keeping track of connections to a single destination. 
+
+I guess there could be a situation where you have something running in a VPC that needs to make more than 55k connections to a server that only provides one IP address (so a single destination). Very popular services that need to support many connections (like google.com) typically use more than one IP addresses anyway. Maybe there is a service that is intensely popular to the clients in your one particular VPC? I can't imagine what situation would require you to make that many connections from a single VPC to a single service. Maybe some massively parallel computing where each agent needs to grab different chunks of data from the same source?
+
+If you reach that limit you can get more IP addresses for your NAT gateway(up to 8), or host the service on more IP addresses (if you control it), or use more NAT gateways, or just redesign the system to use less connections to transfer the same data.
+
+It is kind of incredible that they would include the obscure detail of that 55k connection bottleneck in the documentation. I wonder if that is a real problem that AWS customers encountered.
