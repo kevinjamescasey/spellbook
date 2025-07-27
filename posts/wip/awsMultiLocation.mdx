@@ -1,17 +1,40 @@
 ### Global (regionless/auto-multi-region)
 
-Services that are location agnostic? AWS handles availability for you so you don't much care about the location?
+Services that can be location agnostic so you don't have to set up each region separately and figure out how to use each region at the appropriate time. You still need to configure these to integrate with your region-specific resources.
 
-[CloudFront 400+ points of presence](https://aws.amazon.com/blogs/networking-and-content-delivery/400-amazon-cloudfront-points-of-presence/)
+[CloudFront 400+ points of presence](https://aws.amazon.com/blogs/networking-and-content-delivery/400-amazon-cloudfront-points-of-presence/) (has cheaper versions that aren't fully global)
 IAM
 Route53
+[Shield](https://docs.aws.amazon.com/waf/latest/developerguide/ddos-advanced-summary-protected-resources.html)
+[WAF](https://docs.aws.amazon.com/waf/latest/developerguide/how-aws-waf-works-resources.html)
+Firewall Manager
+Global Accelerator
+
+These services are essentially assumed to have 100% uptime. We blindly trust AWS to make them always available by whatever means they choose. We don't really need to know if they make a few copies in different regions or thousands of copies spread out all over.
 
 possibilities listed on google that I need to investigate further:
-AWS Organizations, AWS Global Accelerator, AWS Direct Connect, AWS Firewall Manager, AWS Web Application Firewall (WAF), and AWS Shield
+AWS Organizations, AWS Direct Connect 
 
-### Multi-AZ
+### Multi-Region
 
-These are things that live in VPCs.
+Services that feature cross-region capabilities but you have to set it up and it costs more for each region.
+
+[S3 Replication](https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html)
+[SecretsManager replication](https://docs.aws.amazon.com/secretsmanager/latest/userguide/replicate-secrets.html)
+[RDS Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.XRgn.html)
+[RDS Aurora Global Database](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html)
+[DynamoDB Global Tables](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html)
+[Backup](https://docs.aws.amazon.com/aws-backup/latest/devguide/cross-region-backup.html)
+KMS
+
+Using R53 and CloudFront to make multi regional solutions?
+https://docs.aws.amazon.com/architecture-diagrams/latest/multi-region-api-gateway-with-cloudfront/multi-region-api-gateway-with-cloudfront.html
+https://docs.aws.amazon.com/whitepapers/latest/real-time-communication-on-aws/cross-region-dns-based-load-balancing-and-failover.html
+
+
+### Single Region Multi-AZ
+
+These are things that live in VPCs. VPCs are single region resources. You typically configure them to use multiple subnets each in a different availability zone. 
 
 Some things cost more to have redundancies cross AZ.
 LBs
@@ -28,20 +51,11 @@ DynamoDB
 
 AWS just tells you the availability percentage per time so you don't have to worry about specific AZs.
 
-### Multi-Region
+?
 
-Services that feature cross-region capabilities but you have to set it up and it costs more.
+The VPC itself (without subnets)
+Internet Gateway
 
-[S3 Replication](https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html)
-[SecretsManager replication](https://docs.aws.amazon.com/secretsmanager/latest/userguide/replicate-secrets.html)
-[RDS Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.XRgn.html)
-[RDS Aurora Global Database](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html)
-[DynamoDB Global Tables](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html)
-[Backup](https://docs.aws.amazon.com/aws-backup/latest/devguide/cross-region-backup.html)
-
-Using R53 and CloudFront to make multi regional solutions?
-https://docs.aws.amazon.com/architecture-diagrams/latest/multi-region-api-gateway-with-cloudfront/multi-region-api-gateway-with-cloudfront.html
-https://docs.aws.amazon.com/whitepapers/latest/real-time-communication-on-aws/cross-region-dns-based-load-balancing-and-failover.html
 
 ### Multi-Partition
 
