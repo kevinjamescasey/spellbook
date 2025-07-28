@@ -48,9 +48,17 @@ Charged for endpoint existence and amount of data processed
 
 Controls connectivity and routing, but not load balancing
 
-## Load Balancing
+## Providing Ingress Points to Resources
 
-Provides a network ingress point that distributes traffic to hosts
+- CloudFront
+    - Provides edge caching in Content Deliver Network for regional origin sources
+- API Gateway
+    - [Edge, Regional, or Private](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-endpoint-types.html)
+- AppSync
+
+- Load Balancing
+    - Distributes traffic to private hosts in target groups
+    - Public or Private
 
 | type        | purpose                         |
 | ----------- | ------------------------------- |
@@ -59,11 +67,13 @@ Provides a network ingress point that distributes traffic to hosts
 | Gateway     | security appliances             |
 | Classic     | TCP, TLS, sticky sessions       |
 
+- Could create your own ingress point on a public EC2
+
 
 ## Connecting to other networks
 
 - VPN sets up IPsec tunnels
-- DirectConeect sets up real networks provided by AWS to bypass your usual ISP
+- DirectConect sets up real networks provided by AWS to bypass your usual ISP
 
 ## HTTP focus
 
@@ -103,7 +113,7 @@ Use a global network of edge locations to improve response time
 - [PrivateLink can provide cross region connectivity](https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-cross-region-connectivity-for-aws-privatelink/)
 - Load Balancers don't appear to be able to span regions or send to targets in other regions
 - VPC allows [inter-region peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html)
-- Transit Gateway allows [intra-region peering](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-peering.html)
+- Transit Gateway allows [inter-region peering](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-peering.html)
 
 
 ## Management Tools

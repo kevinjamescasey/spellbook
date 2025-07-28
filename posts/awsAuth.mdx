@@ -3,7 +3,7 @@ title: "AWS Auth Overview"
 originalPublishDate: "2025-01-22"
 type: reference
 topics: AWS
-lastUpdate: "2025-06-14"
+lastUpdate: "2025-07-27"
 ---
 
 This lists a myriad of ways to control access in AWS to primarily custom services. It is also relevant to AWS services and ultimately data that is accessed through services.
@@ -38,6 +38,19 @@ Mapping AWS IAM credentials to something else
 - Exchange AWS credentials for other AWS Credentials: assume role
 - Exchange AWS credentials for tokens: [service bearer tokens](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_bearer.html) (esoteric)
 - Exchange AWS credentials for RDS password: [RDS IAM Authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html) 
+
+### Domain Validation
+[ACM](https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html)
+
+CloudFront
+  Cognito custom domain with CF proxy
+API Gateway
+NLB and ALB (with Server Name Indicator)
+Classic LB
+App Runner
+Amplify custom domain
+[OpenSearch custom domain](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/customendpoint.html)
+Custom software on any compute service
 
 ## Access Control
 
