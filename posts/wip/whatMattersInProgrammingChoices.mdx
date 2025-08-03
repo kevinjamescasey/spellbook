@@ -1,0 +1,67 @@
+
+
+What effect will different programming choices have on the success of projects and quality of soutions?
+
+# Huge
+
+- structured programming vs assembler
+  - affects all but the most trivial
+  - almost always structured now
+
+# Big
+
+- database type (relational vs document vs graph etc. )
+  - effects access patterns, performance, scale, availability
+  - can get benefits of multiple by paying cost to duplicate data
+
+- data model design
+  - bigger performance effect on bigger data
+  - can be transformed for improvement 
+
+- automated testing
+  - worth it on on complicated parts for large, long-lasting, and important projects
+    - highly used and highly trusted libraries neeed more testing
+  - appropriate mix of pre-deployment and post-deployment testing
+  - the more tests are needed the more effort it takes to write them
+    - example: end-to-end test of large complicated deployed highly asyncronous system
+    - example: highly complicated code has many cases to cover
+
+# Moderate
+
+- automatic memory management vs manual
+  - affects security, bugs, performance, and difficulty
+  - almost always automatic now
+
+- mutable data vs immutable data
+  - immutable much easier for concurrent access
+    - rare on backend
+    - maybe more common in UI
+    - more common in database
+  - mutable good for performance of programming challenges
+  - overwhelming majority of tools and paradigms allow mutatiion
+
+
+
+# Small but noticeable
+
+- procedural vs functional vs object oriented vs hybrid
+  - effect on programmers based on degree of advanced techniques used
+    - esoteric functional techniques and OO patterns will appear foreign to most
+  - affects different types of programs differently
+    - big effect on programming challenge
+      - advanced programming challenges are like soccer ball juggling
+    - little effect on boring CRUD and ETL
+  
+
+- compile time type checking vs dynamic type checking
+  - many people massively overrate the benefits of elaborate type systems
+    - they don't matter on most projects
+    - good automated testing is more important
+
+- interpreted vs compiled
+  - makes a speed difference but doesn't matter on most projects
+    - the top two most popular languages are interpreted
+
+# Little to None
+
+- writing automated tests before writing code

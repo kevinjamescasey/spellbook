@@ -3,7 +3,7 @@ title: "AWS Networking Cheat Sheet"
 originalPublishDate: "2025-01-16"
 type: reference
 topics: AWS
-lastUpdate: "2025-06-14"
+lastUpdate: "2025-08-02"
 ---
 
 Ways to get things in AWS connected to each other and the outside world
@@ -29,9 +29,9 @@ Ways to get things in AWS connected to each other and the outside world
 - Control routing between attached networks
 - Inter-region peering
 
-## PrivateLink Endpoint Types
+## VPC Endpoint Types
 
-A summary of different ways to use AWS PrivateLink.
+A summary of different ways to use AWS PrivateLink and Gateway endpoints.
 
 | Endpoint Type                                                                                                               | Things Accessed                                                                                                              | Self-managed Ingress Point | Traffic Type     |
 | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ---------------- |
@@ -42,7 +42,10 @@ A summary of different ways to use AWS PrivateLink.
 | [Service network](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-service-networks.html)              | [service network](https://docs.aws.amazon.com/vpc-lattice/latest/ug/service-networks.html) (group of resources and services) | resource gateway (no LB)   | TCP?             |
 | [Gateway](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html) (allegedly  not PrivateLInk)                                        | S3 or DynamoDB                                                                                                               | none                       | HTTPS            |
 
-Charged for endpoint existence and amount of data processed
+- Charged for endpoint existence and amount of data processed
+- Gateway endpoints require routes to vpce- ID
+- The PrivateLink VPC endpoints get a security group and an Elatic Network Interface in each subnet
+
 
 ## VPC Lattice
 

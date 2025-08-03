@@ -3,7 +3,7 @@ title: "AWS Auth Overview"
 originalPublishDate: "2025-01-22"
 type: reference
 topics: AWS
-lastUpdate: "2025-07-27"
+lastUpdate: "2025-08-02"
 ---
 
 This lists a myriad of ways to control access in AWS to primarily custom services. It is also relevant to AWS services and ultimately data that is accessed through services.
@@ -86,6 +86,8 @@ Configuring permissions with policies, rules, and mappings
 
 - claims and scopes from identity providers
 - IAM role policies
+- IAM resource bsaed policies
+  - cross account access also requires identity-based policy
 - IAM user groups
 - IAM rules based on resource tags (depends on how fine grained the resources can be tagged) ([ABAC blog](https://www.nccgroup.com/us/research-blog/introduction-to-aws-attribute-based-access-control/))
 - [AppSync query, mutation, and field level](https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html#using-additional-authorization-modes)

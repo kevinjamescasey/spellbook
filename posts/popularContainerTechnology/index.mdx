@@ -3,7 +3,7 @@ title: "Popular Containerization Essentials"
 originalPublishDate: "2024-10-06"
 type: reference, learning
 topics: containers, docker, kubernetes, virtual machines, colima
-lastUpdate: "2025-03-08"
+lastUpdate: "2025-08-03"
 images:
     - ./containersOnOptionalLayers.jpg
     - ./containersThreeWaysOnOneMachine.jpg
@@ -37,16 +37,16 @@ There seems to be many pieces of software that act as both an engine and a runti
 
 These are the most important terms that I have gleaned from documentation and other glossaries.
 
-| Term                   | Definition                                                                                   | Examples                                                                          |
-|------------------------|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| container              | software from a container image running in a process with a limited and isolated environment |                                                                                   |
-| container image        | file archive that contains other files required to run piece of software                     |                                                                                   |
-| container registry     | a place to store, look up, and retrieve container iamges                                     |                                                                                   |
-| container engine       | software that manages container images and containers often as a server for a client         | Docker, CRI-O, Railcar, RKT, LXC, Podman                                          |
-| container runtime      | software component that container engines delegate container running to                      | runc, containerd, docker engine, incus, CRI-O, crun, railcar, katacontainers, MRC |
-| container host         | machine with OS, virtual machine with OS, or another container where the conainers will run  |                                                                                   |
-| container orchestrator | tool that starts, stops, and monitors containers often distrubted across multiple hosts      | Kubernetes, ECS, Docker Compose Swarm, whatever PaaSs use                         |
-|                        |                                                                                              |                                                                                   |
+| Term                   | Definition                                                                                       | Examples                                                           |
+|------------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| container              | software from a container image running in a process with a limited and isolated environment     |                                                                    |
+| container image        | file archive that contains other files required to run piece of software                         | [hello-world](https://hub.docker.com/_/hello-world)                |
+| container registry     | a place to store, look up, and retrieve container images                                         | Docker Hub, AWS ECR,                                               |
+| container engine       | software that runs containers (based on images) on a runtime. Usually has a CLI and image cache. | Docker Engine, CRI-O, Railcar, RKT, LXC, Podman, Colima            |
+| container runtime      | software component that container engines delegate container running to                          | runc, containerd, Incus, CRI-O, crun, railcar, katacontainers, MRC |
+| container host         | machine with OS, virtual machine with OS, or another container where the containers will run     |                                                                    |
+| container orchestrator | tool that starts, stops, and monitors containers often distrubted across multiple hosts          | Kubernetes, ECS, Docker Compose Swarm, whatever PaaSs use          |
+|                        |                                                                                                  |                                                                    |
 
 ### Local Machine Usage
 
@@ -55,7 +55,7 @@ These tools make it easy to run containers on your local machine and make it eas
 Since container technology as defined by the [Open Container Initiative](https://opencontainers.org/) (part of Linux Foundation) and using [runc](https://github.com/opencontainers/runc) relies on Linux, virtual machines are often required on non-Linux OSes. These tools either provide or require the creation of Linux VMs which make it possible to run containers on non-Linux OSes.
 
 ``` shell
-brew install docker colima minikube kubectl
+brew install docker colima minikube kubectl podman
 ```
 
 #### Docker Desktop
@@ -83,6 +83,17 @@ Minikube makes it easy to run Kubernetes on your local machine, but the [Minikub
 Use `minikube start` to create a Kubernetes cluster.
 `minikube start --driver=docker` allows amd64 images to run on arm64 machines, but it requires Docker Desktop to be installed and running. It will be the default driver if Docker Desktop is running, otherwise `qemu2` is the default which apparently comes with the Minikube (at least when installed by Homebrew).
 Use `minikube status` to see the current state.
+
+#### Podman
+
+Has the same CLI interface as `docker`. It runs Fedora CoreOS on a VM using different VM technology depending on which host OS it is on. Does not run a deamon server like Docker does.
+
+Create and start a virtual machine
+``` shell
+podman machine init
+podman machine start
+```
+
 
 #### Comparing and Switching
 
