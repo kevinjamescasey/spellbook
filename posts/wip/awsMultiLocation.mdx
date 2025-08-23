@@ -1,6 +1,8 @@
-# Global (regionless/auto-multi-region)
+# Beyond Regions
 
-Services that can be location agnostic so you don't have to set up each region separately and figure out how to use each region at the appropriate time. You still need to configure these to integrate with your region-specific resources.
+Services with high replication so you don't have to set up each region separately and figure out how to use each region at the appropriate time. You still need to configure these to integrate with your region-specific resources.
+
+These services are essentially assumed to have 100% uptime. We blindly trust AWS to make them always available by whatever means they choose. We don't really need to know if they make a few copies in different regions or thousands of copies spread out all over.
 
 [CloudFront 400+ points of presence](https://aws.amazon.com/blogs/networking-and-content-delivery/400-amazon-cloudfront-points-of-presence/) (has cheaper versions that aren't fully global)
 IAM
@@ -10,15 +12,17 @@ Route53
 Firewall Manager
 Global Accelerator
 
-These services are essentially assumed to have 100% uptime. We blindly trust AWS to make them always available by whatever means they choose. We don't really need to know if they make a few copies in different regions or thousands of copies spread out all over.
+
 
 possibilities listed on google that I need to investigate further:
 AWS Organizations, AWS Direct Connect 
 
-### Multi-Region
+# Multi-Region
 
 Services that feature cross-region capabilities but you have to set it up and it costs more for each region.
 
+[S3 Multi-Region Access Points](https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiRegionAccessPoints.html)
+    [MRAP Replication](https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiRegionAccessPointBucketReplication.html)
 [S3 Replication](https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html)
 [SecretsManager replication](https://docs.aws.amazon.com/secretsmanager/latest/userguide/replicate-secrets.html)
 [RDS Read Replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.XRgn.html)
@@ -26,24 +30,45 @@ Services that feature cross-region capabilities but you have to set it up and it
 [DynamoDB Global Tables](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html)
 [Backup](https://docs.aws.amazon.com/aws-backup/latest/devguide/cross-region-backup.html)
 [KMS](https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html)
+[CloudWatch Cross Account and Cross Region Dashboards](https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiRegionAccessPoints.html)
 
 Using R53 and CloudFront to make multi regional solutions?
 https://docs.aws.amazon.com/architecture-diagrams/latest/multi-region-api-gateway-with-cloudfront/multi-region-api-gateway-with-cloudfront.html
 https://docs.aws.amazon.com/whitepapers/latest/real-time-communication-on-aws/cross-region-dns-based-load-balancing-and-failover.html
 
+## Cross Region Communication
+VPC Peering
+TransitGateway
+[PrivateLink](https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiRegionAccessPoints.html)
 
-### Single Region 
+# Single Region
+
+Resources with no way to copy or automatically replicate to another region. You can create more of them in other regions yourself.
+
+
 
 #### zoneless or auto-multi-AZ
 
+AMC certs
 The VPC itself (without subnets)
 Internet Gateway
 SQS queue
 SNS topic
 EventBridge bus
+Lambda function (can access subnets with ENIs)
+Glue (can access subnets with ENIs)
+App Runner ([can access subnets with ENIs](https://docs.aws.amazon.com/apprunner/latest/dg/network-vpc.html))
+DynamoDB
+
+Amplify?
+DocumentDB?
+
+... tons of service resource fall in this single-region category
+
+! These singe-region sections are incomplete and not entirely clear. 
 
 #### Multi-AZ
-These are things that live in VPCs. VPCs are single region resources. You typically configure them to use multiple subnets each in a different availability zone. 
+These are things that live in a VPC subnet in one AZ in one region. For redundancy in hopes of improving availability you can make more of them in different AZs. 
 
 Some things cost more to have redundancies cross AZ.
 LBs
@@ -51,17 +76,22 @@ ElastiCache
 DAX
 ECS
 EKS
+Batch
 EFS
 RDS standby failover
-App Runner ?
-Glue ?
-Amplify?
+CloudHSM
 
 
+# Your Choice
+
+Outposts
+Snowcone
+Snowball
+Snowmobile
+VPN (from regional VPC to your choice)
+DirectConnect (from regional VPC to your choice)
 
 
+# Multi-Partition
 
-### Multi-Partition
-
-I belie
-do it yourself by transferring data through standard protocols?
+I believe the possible locations for resources in different partitions would be mutually exclusive. Using more than one partition seems very unlikely, but if you did want to duplicate something across partitions you'd have todo it yourself by transferring data through standard protocols. AWS would not do it for you.
