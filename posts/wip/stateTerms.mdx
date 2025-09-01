@@ -1,0 +1,53 @@
+
+Idempotent
+
+Idempotency is an adjective often ascribed to an operation that only affects the state of the system the first time it is executed and has no effect on subsequent executions. The scope of that state is rarely discussed.
+
+Generally you can safely assume these are out of scope:
+
+The entropy of the universe that is affected by consuming electricity and radiating heat.
+Debugging log entries that are added for each execution.
+
+But what about these:
+
+Cache entries might be added for update on write caches. That can affect the performance of the system, but is probably out of scope for most purposes.
+
+Last updated timestamp could be updated. Does the system only update those when the data changes or does it just overwrite the data and update the timestamps every time. Often those timestamps could be out of scope, but if there is another process using those timestamps it might be affected. Last update attempt timestamp could be tracked in addition to last actual change timestamp.
+    
+A service performing an operation could make calls to other downstream systems. It is difficult to determine the effects on state changes those calls could have. You might need to consider if those downstream calls are considered idempotent and if the non-idempotent ones are in scope of the calling operation.
+
+Finally, the state that is generally considered in scope for the idempotency of the operation is the data in the main state stores for the component performing the operation. The caller of the operation is often aware of this state and expects it to be updated by at least the first execution of the operation.
+
+
+So if someone asks you if an operation is idempotent, I think it is fair to ask for clarification of the scope of the considered state.
+
+
+Immutable
+
+What about immutable data stores? If no operation overwrites existing data, then idempotency could depend on the perceived state of the system. Does the system check if an operation truly results in a change and ignore operations that don't change data or does the system make a record of those operations by storing an update event. Instead of thinking in terms of operations performed, we may want to think about event messages sent and recorded.
+
+Update in place systems might be a somewhat dangerous way to track information, but they seem to make it fairly easy to implement idempotent operations. We could say that idempotent operations lose information, but often they are intentionally losing information that we assume we don't need.
+
+
+Pure functions and side effects
+
+Pure functions do not have side effects and the output depends only on the input. What is the exact scope of these side effects?
+
+Once again the entropy of the universe is affected so that must be out of scope.
+
+Changes to memory are disk that persist after the function invocation completes are in scope.
+
+What about temporary changes that are undone before the function invocation completes?
+What about passing information back and forth over a network? Maybe if you're just making remote calls to pure functions, the function can still be considered pure.
+
+
+FIFO
+At least Once
+Eventually Consistent
+ACID
+
+
+Conclusion
+
+I think they key is to understand for what purpose you want idempotency or function pureness. Typically you just want to ensure the system functions properly and efficiently within a practical tolerance. Truly idempotent and truly without side effects is not possible in the largest possible scope. When we use these words they are not rigorous terms that always means the same thing. They are abstractions regarding changes to state within specific scopes that are relevant to your current needs.
+
