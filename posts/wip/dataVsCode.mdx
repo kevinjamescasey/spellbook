@@ -1,0 +1,30 @@
+
+Data, Code, Configuration
+
+All code is data. Some data is code.
+
+What makes data code? If there is a program that reads in that data and considers it to be an expression of a language then that data is code.
+
+What if a datum has a small amount of invalid syntax? Is the valid part still code? Yeah. We could break the program down into components like lexer and parser. As those components operate on parts of the data they probably validate parts of the data separately, so a part of the data could be valid code while another part could be invalid. I don't want to try to be more rigorous about the definition of "code".
+
+Is all code configuration? I think it is fair to say that all code is configuring what a program should do, so code is a type of configuration.
+
+Is CloudFormation and Terraform input code? They definitely configure what the programs should do to call web services to (typically) create cloud resources. Are those programs considered interpreters or compilers that define a programming language? They are not like the most popular examples of languages that we use, but they allow the configuration to describe conditional logic, loops, and other abstractions. CloudFormation has conditions, lookups in maps, invocation of intrinsic functions, and a sort of pre-execution transformation. Terraform has foreach iteration, ternary conditional expressions, modules, invocation of built in functions, and execution of inline shell scripts. These are all things I'd expect from a programming language. There are probably other examples that I omitted. I think it is reasonable to argue that CloudFormation and Terraform inputs are code. I don't think the languages defined by these tools are intended to be general purpose. They are domain specific languages (DSLs).
+
+Is the infrastructure build by CloudFormation and Terraform code? No, most is not. I wouldn't say it is infrastructure as code (IaC). I would that it is infrastructure defined by code or infrastructure from code. The tools can also delete the infrastructure and the code input into those tools can configure what might happen during that delete process. So it might be better to say it is infrastructure managed by code or automated infrastructure.
+
+I would concede that most of the input to the so-called IaC tools is declarative configuration. That is good because it makes them easy to understand, but declarative configuration is not always enough. It is often easier to achieve what you want with a general purpose language as is done with Cloud Development Kit (CDK).
+
+Does defining your infrastructure with a general purpose language make it too complicated? Not necessarily, but it does make it easy to add more complex code. You can still make most of your code simple declarative data. It is up to you. Tools like CDK do add a layer onto the YAML, JSON, or HCL layer. They add extra steps in the process. That extra complexity can be worth it if you get sufficient utility out of it.
+
+What kind of utility does less declarative code add? It can make the resulting system more dynamic. It can make complex decisions to achieve higher precision that would be difficult without it. YAML and JSON were intended to be data notations, not programming languages. Decades of effort has refined the popular general purpose programming language into tools of expressing solutions to problems as complex as machine learning and maybe even artificial intelligence. Those languages come with ecosystems of tools like linters, test runners, type checkers, and library sharing systems. 
+
+What are practical examples of less declarative code being the better choice?
+Maybe inspecting the environment and adjusting the deployed solution based on what is available, like calling the right service APIs based on the public cloud provider.
+Maybe including custom code and error handling to fetch data from somewhere that will be used in the solution, like simple config, reference data, secrets, schemas, or code. 
+It might allow you to control the structure of your system to match the problem instead of having a static structure with all of the complex decision making in the deployed solution. That might allow the code in the deployed solution to be simpler since that complexity has been shifted left in the process to the deployment step.
+
+
+CDK works uses this two step process: generate IaC DSL -> reconcile cloud resources with IaC DSL (based on last known state). This process limits the utility of the general purpose code to only affecting the generation of the IaC DSL. It cannot directly and arbitrarily affect what the IaC tools do. Other mechanisms such as CloudFormation Lambda-backed custom resources and Terraform null resources with provisioners allow customization during the second step.
+
+
