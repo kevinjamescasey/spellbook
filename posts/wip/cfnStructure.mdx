@@ -1,0 +1,48 @@
+
+
+There are reasons to split your systems into multiple CloudFormation stacks instead of including everything in one.
+
+The more components in a template, the less likely it is to be reusable.
+The more parameters in a template, the more likely it is to be reusable.
+
+This doesn't mean that you should maximize parameters and minimize components. Too many parameters can add unnecessary complexity to a template. Too many tiny templates can add unnecessary complexity to deployments. 
+
+CloudFormation templates are not composable into a single template.
+CloudFormation stacks are composable from multiple templates, but child templates have to be in S3. So a parent template can define a structure made up of child templates. It should be easy to copy all templates into S3 whenever they change.
+This is similar to having composable templates, but the templates have to reference S3 locations. So to have predictable results you'd have to make sure what ends up in those S3 locations is the same thing that was there during testing.
+
+- Reusability
+  - Make multiple stacks from the same template
+- Grouping by operational lifecycle
+  - Have whole sets of components that you want to easily delete without having to delete each component from the template
+- Organize them in a way that is easier to read and understand
+
+
+
+- Reasons not to delete a stack
+  - Has persistent data
+    - Make a copy in another component
+  - Is supporting a live workload
+    - Direct the load to another component
+
+Separating components by purpose or type of concerns may make it more likely that templates are reusable.
+
+Some categories to look for that indicate you might want to split a separate template:
+
+- Components that store persistent data
+  - Examples: S3, EFS, RDS, DynamoDB
+- Components that provide infrastructure for other components
+  - Examples: VPC, load balancers, R53, ECS cluster (without tasks), EKS cluster
+- Components that keep rather ephemeral state
+  - Examples: ECS tasks, Lambda functions
+    
+This doesn't mean you should put all components of the same category into one template. For example, you likely won't want a template with RDS and DynamoDB unless that particular combination is highly reusable for you for some reason.
+A template with multiple components from the same category might be highly reusable though. For example, one with a R53 hosted zone, load balancer, and ECS cluster might be used in many VPCs. 
+
+# Dependencies between stacks
+
+One stack can import a value that is output by another. This creates a tight coupling between stacks. The stack providing the output cannot be deleted while another stack is using that output.
+
+You can try to decouple them by putting the shared value into an SSM parameter. This can allow the providing to stack to be deleted, but the dependency on the parameter is still there. This might be worse if the needed parameter gets deleted. The parameter could be retained when its parent stack is deleted, but then it becomes an orphaned resource and will stop being updated in the same way. Maybe another mechanism can take over managing its value, such as a deployment script or a new stack that imports the existing parameter resource.
+
+Another approach is to have a deployment code find and read outputs from one stack and provide them as inputs to another stack. The deployment code could be flexible enough to handle missing or invalid values by looking them up elsewhere or alerting a human. The term "glue code" comes to mind.

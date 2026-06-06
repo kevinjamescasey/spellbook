@@ -1,15 +1,15 @@
 
 
-These are mostly tested on macOS, but might work similarly on other OSes.
+Mostly Mac and Linux CLI tools
 
-# remote machines
+# other machine
 
-## check if server is accepting TCP connection on port
+## check if server is accepting TCP connection on port from "here"
 ### Debian, Ubuntu
 sudo apt-get install netcat
 nc -vzw 3 host port
 ### macOS
-nc -vzG 3 host port # Mac
+nc -vzG 3 host port
 ### Amazon Linux
 sudo yum install nc
 nc -vzw 3 host port
@@ -25,7 +25,50 @@ nmap -sn 192.168.1.0/24
 ## port scan specific hosts agressively
 nmap -A -T4 192.168.1.1,7,134,162,215
 
-# local machine
+## Find the public IP address that you're using
+curl ipinfo.io
+curl ipinfo.io/ip
+curl icanhazip.com
+curl ifconfig.me
+
+## Attempt to resolve a DNS name to an IP address
+nslookup name.tld [resolver]
+dig [@resolver] name.tld
+host name.tld
+
+## View response from HTTP GET request
+curl name.tld
+wget -qO- name.tld
+
+## view certificate from server
+curl -vI https://example.com
+
+echo | openssl s_client -showcerts -servername example.com -connect example.com:443 2>/dev/null | openssl x509 -inform pem -noout -text
+
+# dump filtered network traffic to a file
+tcpdump
+
+## icmp based (useless on many networks)
+ping
+traceroute
+mtr
+
+
+# current machine
+
+## find local IP
+
+Wi-Fi IP: ipconfig getifaddr en0
+Ethernet IP: ipconfig getifaddr en1
+
+
+netstat -an | head
+
+hostname -I #not mac
+
+```
+ip route get 1.2.3.4 | awk '{print $7}' # not mac
+```
 
 ## Find use of local ports
 
@@ -41,7 +84,7 @@ netstat -lnp tcp
 `-n` shows numeric addresses instead of names
 `-l` shows full IPv6 addresses
 
-## Findwhich pids are using network ?
+## Find which pids are using network ?
 netstat -tulpn 
 lsof -i
 
@@ -76,58 +119,30 @@ sudo apachectl start
 The root is in `/Library/WebServer/Documents/index.html.en` and by default can only be edited by root.
 The config is in `/private/etc/apache2/httpd.conf`
 
-## Find the public IP address that your internet traffic is coming from
-curl ipinfo.io
-curl icanhazip.com
 
-## Attempt to resolve a DNS name to an IP address
-nslookup name.tld
-dig name.tld
-host name.tld
-
-## View response from HTTP GET request
-curl name.tld
-wget -qO- name.tld
-
-## find local IP
-hostname -I
-
-```
-ip route get 1.2.3.4 | awk '{print $7}'
-```
-
-ifconfig
-netstat
-
-# network exploration
-find lan ip
-find lan cidr
-find other lan host ips
-    find lan's router lan ip
-find lan's router wan ip
-
-# from https://gist.githubusercontent.com/kevinjamescasey/8e1458ee0cb0ff78a96056713c4c339f/raw/c022baae9d77a629d2969837dd7432701d2fc004/networking
-
-## local
-ifconfig
-netstat
-tcpdump
-ip
-
-fuser port/protocol
+# utilities
 
 ## network components (daemons/services)
 unbound (dns)
 iptables (firewall)
-
-## remote
-
-## icmp based (useless on many networks)
-ping
-traceroute
-mtr
-
+iptab (shows cidr masks)
+socat
 
 ## ssh
 avahi-daemon #ssh by hostname instead of ip
 scp, sftp, rsync
+
+
+# potential
+## network exploration
+### find lan ip
+### find lan cidr
+### find other lan host ips
+
+    arp -a
+
+#### find lan's router lan ip
+#### find lan's router wan ip
+
+## old list of networking commands
+https://gist.githubusercontent.com/kevinjamescasey/8e1458ee0cb0ff78a96056713c4c339f/raw/c022baae9d77a629d2969837dd7432701d2fc004/networking
